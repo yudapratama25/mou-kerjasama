@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <!-- Page Heading -->
     <h1 class="h3 mb-0 text-gray-800">Data Unit Kerja</h1>
-    <p>Tambah Data</p>
+    <p>Tambah Data Test</p>
 
     <div class="row">
         <div class="col-12 col-md-6">
