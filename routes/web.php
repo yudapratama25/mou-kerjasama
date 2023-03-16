@@ -31,13 +31,17 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::get('/', function () {
-        return view('dashboard');
+        $countUnit = DB::table('units')->count();
+        $countMou = DB::table('mous')->count();
+
+        return view('dashboard', ['countUnit' => $countUnit, 'countMou' => $countMou]);
     })->name('dashboard');
 
     Route::resource('unit', UnitController::class);
 
     Route::get('mou/export', [MouController::class, 'export'])->name('mou.export');
     Route::get('mou/download-file/{file}', [MouController::class, 'downloadFile'])->name('mou.download-file');
+    Route::post('mou/upload-mou-file', [MouController::class, 'uploadFile'])->name('mou.uploadFile');
     Route::resource('mou', MouController::class);
 });
 

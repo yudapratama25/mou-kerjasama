@@ -37,6 +37,7 @@ class Mou extends Model
         'document_tor',
         'document_rab',
         'document_sptjm',
+        'document_mou',
         'document_bank_transfer_proceeds',
         'initial_koor',
         'initial_ppk_pnbp',

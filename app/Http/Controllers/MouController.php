@@ -75,6 +75,7 @@ class MouController extends Controller
             'document_tor' => 'boolean',
             'document_rab' => 'boolean',
             'document_sptjm' => 'boolean',
+            'document_mou' => 'boolean',
             'document_bank_transfer_proceeds' => 'boolean',
             'description' => 'max:5000',
             'mou_file' => 'file',
@@ -158,6 +159,7 @@ class MouController extends Controller
             'document_tor' => 'boolean',
             'document_rab' => 'boolean',
             'document_sptjm' => 'boolean',
+            'document_mou' => 'boolean',
             'document_bank_transfer_proceeds' => 'boolean',
             'description' => 'max:5000',
             'mou_file' => 'file',
@@ -172,7 +174,7 @@ class MouController extends Controller
             $input['mou_file'] = $mou_file;
         }
 
-        foreach (['pks', 'tor', 'rab', 'sptjm', 'bank_transfer_proceeds'] as $item) {
+        foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds'] as $item) {
             if (!$request->has('document_'.$item)) {
                 $input['document_'.$item] = 0;
             }

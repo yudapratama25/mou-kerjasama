@@ -16,7 +16,7 @@
                     <form action="{{ route('unit.store') }}" method="post">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label">Nama Unit Kerja</label>
+                        <label class="text-dark font-weight-bold">Nama Unit Kerja</label>
                             <input type="text" name="name" class="form-control" placeholder="Masukan nama unit kerja" required>
                         </div>
                         <button class="btn btn-primary" type="submit">

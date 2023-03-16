@@ -81,7 +81,7 @@
     </li>
     <li class="list-group-item">
         <strong>Kelengkapan Dokumen</strong> <br/>
-        @foreach (['pks', 'tor', 'rab', 'sptjm', 'bank_transfer_proceeds'] as $item)
+        @foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds'] as $item)
         <span class="{{ ($mou->{'document_'.$item} == 1) ? 'text-success' : 'text-danger' }}">
             @if ($item == "bank_transfer_proceeds")
                 Bukti Transfer Bank
@@ -95,7 +95,7 @@
         @endforeach
     </li>
     <li class="list-group-item">
-        <strong>File MOU</strong> <br/>
+        <strong>Upload File Kelengkapan Dokumen</strong> <br/>
         @if ($mou->mou_file != NULL)
             <a href="{{ route('mou.download-file', $mou->mou_file) }}" class="btn btn-primary btn-sm">
                 <i class="fas fa-download"></i> Download File
