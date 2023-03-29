@@ -13,6 +13,7 @@ class Mou extends Model
     protected $table = "mous";
 
     protected $fillable = [
+        'year_id',
         'unit_id',
         'user_id',
         'letter_number',
@@ -55,5 +56,10 @@ class Mou extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
+
+    public function files()
+    {
+        return $this->hasMany(MouFile::class, 'mou_id', 'id')->select(['id','mou_id','filename','size']);
     }
 }

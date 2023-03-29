@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Exports\MouExport;
 use App\Models\Mou;
+use App\Models\MouFile;
 use App\Models\Unit;
+use App\Models\Year;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +17,7 @@ class MouController extends Controller
 {
     public function index()
     {
-        $mous = Mou::with('unit')->orderBy('created_at', 'desc')->get();
+        $mous = Mou::with('unit')->where('year_id', session('selected_year_id'))->orderBy('created_at', 'desc')->get();
         return view('mou.index', compact('mous'));
     }
 
@@ -37,7 +39,7 @@ class MouController extends Controller
 
     public function create()
     {
-        $units = Unit::orderBy('name', 'asc')->get();
+        $units = Unit::where('year_id', session('selected_year_id'))->orderBy('name', 'asc')->get();
         return view('mou.create', compact('units'));
     }
 
@@ -78,36 +80,55 @@ class MouController extends Controller
             'document_mou' => 'boolean',
             'document_bank_transfer_proceeds' => 'boolean',
             'description' => 'max:5000',
-            'mou_file' => 'file',
+            'files' => 'array',
+            'files_size' => 'array',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($input);
         }
 
-        if ($request->hasFile('mou_file')) {
-            $mou_file = $this->uploadFile("upload/mou", $request->file('mou_file'));
-            $input['mou_file'] = $mou_file;
-        }
-
         $input['user_id'] = Auth::id();
 
-        Mou::create($input);
+        $input['year_id'] = session('selected_year_id');
+
+        $new_mou = Mou::create($input);
+
+        if ($request->has('files')) {
+            foreach ($input['files'] as $indexFile => $filename) {
+                MouFile::create(['mou_id' => $new_mou->id, 'filename' => $filename, 'size' => $input['files_size'][$indexFile]]);
+            }
+        }
+
+        createLog("Create Data MOU | No. Surat $new_mou->letter_number");
 
         return redirect()->route('mou.index')->with('success', 'Data MOU berhasil ditambahkan');
     }
 
-    private function uploadFile($destination, $file, $oldFile = null)
+    public function uploadFile(Request $request)
     {
-        $filename = date('dmy') . Str::random(10) . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path($destination), $filename);
+        $path = public_path('upload/mou');
 
-        // check jika sudah ada file sebelumnya, maka hapus dari storage
-        if ($oldFile != NULL && file_exists(public_path($destination . '/' . $oldFile))) {
-            unlink(public_path($destination . '/' . $oldFile));   
-        }
+        $file = $request->file('file');
 
-        return $filename;
+        $name = rand(100,999) . '_' . trim($file->getClientOriginalName());
+
+        $name = str_replace('&', 'dan', $name);
+
+        $size = $file->getSize();
+
+        $file->move($path, $name);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'upload file successfully',
+            'data' => [
+                'uniq' => rand(100, 999),
+                'name' => $name,
+                'original_name' => $file->getClientOriginalName(),
+                'size' => $size
+            ]
+        ]);
     }
 
     public function edit(Mou $mou)
@@ -162,16 +183,12 @@ class MouController extends Controller
             'document_mou' => 'boolean',
             'document_bank_transfer_proceeds' => 'boolean',
             'description' => 'max:5000',
-            'mou_file' => 'file',
+            'files' => 'array',
+            'files_size' => 'array',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($input);
-        }
-
-        if ($request->hasFile('mou_file')) {
-            $mou_file = $this->uploadFile("upload/mou", $request->file('mou_file'));
-            $input['mou_file'] = $mou_file;
         }
 
         foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds'] as $item) {
@@ -182,6 +199,30 @@ class MouController extends Controller
 
         $mou->update($input);
 
+        $update_files = $request->has('files') ? $input['files'] : [];
+
+        foreach($mou->files as $old_file) {
+            if (!in_array($old_file->filename, $update_files)) {
+                if (file_exists(public_path('upload/mou/' . $old_file->filename))) {
+                    unlink(public_path('upload/mou/' . $old_file->filename));   
+                }
+
+                MouFile::where('id', $old_file->id)->delete();
+            } else {
+                if (($key = array_search($old_file->filename, $update_files)) !== false) {
+                    unset($update_files[$key]);
+                }
+            }
+        }
+
+        if (count($update_files) > 0) {
+            foreach ($update_files as $key => $new_filename) {
+                MouFile::create(['mou_id' => $mou->id, 'filename' => $new_filename, 'size' => $input['files_size'][$key]]);
+            }
+        }
+
+        createLog("Update Data MOU | No. Surat $request->letter_number");
+
         return redirect()->route('mou.index')->with('success', 'Data MOU berhasil diubah');
     }
 
@@ -189,7 +230,13 @@ class MouController extends Controller
     {
         $this->validate($request, ['id' => 'required']);
 
-        Mou::where('id', $request->id)->delete();
+        $mou = Mou::where('year_id', session('selected_year_id'))->where('id', $request->id)->first();
+
+        if ($mou != null) {
+            $letter_number = $mou->letter_number;
+            $mou->delete();
+            createLog("Delete Data MOU | No. Surat $letter_number");
+        }
 
         $request->session()->flash('success', 'Data MOU berhasil dihapus');
 
@@ -198,6 +245,8 @@ class MouController extends Controller
 
     public function export()
     {
-        return Excel::download(new MouExport, 'DATA MOU & PKS.xlsx');
+        $year = Year::where('id', session('selected_year_id'))->first()->year;
+
+        return Excel::download(new MouExport, 'DATA MOU & PKS TAHUN '. $year .'.xlsx');
     }
 }

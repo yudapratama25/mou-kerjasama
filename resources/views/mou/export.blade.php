@@ -34,6 +34,40 @@
             <td></td>
             <td></td>
             <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
         </tr>
         <tr>
@@ -70,46 +104,8 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -167,7 +163,6 @@
             <td colspan="6">KELENGKAPAN DOKUMEN</td>
             <td colspan="4">PARAF</td>
             <td rowspan="2">KETERANGAN</td>
-            <td rowspan="2">UPLOAD FILE MOU</td>
         </tr>
         <tr>
             <td>MULAI</td>
@@ -224,7 +219,6 @@
                 <td></td>
                 <td></td>
                 <td>{{ $mou->description }}</td>
-                <td>{{ ($mou->mou_file != NULL) ? 'ADA' : 'TIDAK ADA' }}</td>
             </tr>
         @endforeach
     </tbody>

@@ -10,16 +10,16 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Data Unit Kerja</h1>
-        <a href="{{ route('unit.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data
+        <h1 class="h3 mb-0 text-gray-800">Data Pengguna</h1>
+        <a href="{{ route('user.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Pengguna
         </a>
     </div>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Unit Kerja</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Daftar Pengguna</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -27,22 +27,28 @@
                     <thead>
                         <tr>
                             <th width="8%">No.</th>
-                            <th>Nama Unit Kerja</th>
-                            <th width="20%">Aksi</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th width="10%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($units as $unit)
+                        @foreach ($users as $user)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $unit->name }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->role }}</td>
                                 <td>
-                                    <a href="{{ route('unit.edit', $unit->id) }}" class="btn btn-warning btn-sm mr-2">
-                                        Edit
-                                    </a>
-                                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteData({{ $unit->id }}, `{{ route('unit.destroy', $unit->id) }}`)">
-                                        Hapus
-                                    </button>
+                                    @if ($user->role === "user")
+                                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning btn-sm w-100">
+                                            Edit
+                                        </a>
+                                        {{-- <button type="button" class="btn btn-danger btn-sm" onclick="deleteData({{ $user->id }}, `{{ route('unit.destroy', $user->id) }}`)">
+                                            Hapus
+                                        </button> --}}
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

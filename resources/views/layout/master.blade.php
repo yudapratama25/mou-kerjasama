@@ -21,8 +21,6 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-    <!-- CSS for Dropzone -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.min.css">
     @yield('css')
 
 </head>
@@ -47,6 +45,20 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
+            <div class="sidebar-heading mb-1">
+                Pilih Tahun
+            </div>
+
+            <li class="nav-item">
+                <div class="form-group px-3">
+                    <select id="change-year" onchange="changeYear(this)" class="form-control" style="border: none;">
+                        @foreach (session('years') as $year_id => $year)
+                            <option value="{{ $year_id }}" @selected(session('selected_year_id') == $year_id)>{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </li>
+
             <!-- Heading -->
             <div class="sidebar-heading">
                 Main Menu
@@ -60,15 +72,19 @@
             </li>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item {{ ($menu == 'unit') ? 'active' : null }}">
+            <li class="nav-item {{ ($menu == 'unit' || $menu == 'user' || $menu == 'log') ? 'active' : null }}">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-database"></i>
                     <span>Master Data</span>
                 </a>
-                <div id="collapseTwo" class="collapse {{ ($menu == 'unit') ? 'show' : null }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo" class="collapse {{ ($menu == 'unit' || $menu == 'user' || $menu == 'log') ? 'show' : null }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item {{ ($menu == 'unit') ? 'active' : null }}" href="{{ route('unit.index') }}">Unit Kerja</a>
+                        @if (Auth::user()->role !== "user")
+                            <a class="collapse-item {{ ($menu == 'user') ? 'active' : null }}" href="{{ route('user.index') }}">Pengguna</a>
+                            <a class="collapse-item {{ ($menu == 'log') ? 'active' : null }}" href="{{ route('log') }}">Log</a>
+                        @endif
                     </div>
                 </div>
             </li>
@@ -83,6 +99,12 @@
                 <a class="nav-link" href="{{ route('mou.index') }}">
                 <i class="fas fa-fw fa-list"></i>
                 <span>MOU & PKS</span></a>
+            </li>
+            
+            <li class="nav-item {{ ($menu == 'profile') ? 'active' : null }}">
+                <a class="nav-link" href="{{ route('user.profile') }}">
+                <i class="fas fa-user-circle" style="font-size:1.1em;"></i>
+                <span>Profil</span></a>
             </li>
 
             <!-- Divider -->
@@ -156,7 +178,6 @@
 
     <!-- Core plugin JavaScript-->
     <script src="{{ asset('/') }}vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.min.js"></script>
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
@@ -168,7 +189,7 @@
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil',
-                text: `{{ session('success') }}`,
+                text: `{!! session('success') !!}`,
                 timer: 2500,
             });
         </script>
@@ -205,6 +226,26 @@
                     );
                 }
             });
+        }
+
+        function changeYear(element) {
+            console.log(element.value);
+            $.post(`{{ route('change-year') }}`, {_token: _token, year_id: element.value},
+                function (response) {
+                    if (response.status == true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Pergantian tahun berhasil'
+                        });
+                        setTimeout(() => {
+                            window.location.reload(true);
+                        }, 1100);
+                    } else {
+                        alert("Terjadi kesalahan");
+                    }
+                }
+            );
         }
     </script>
 

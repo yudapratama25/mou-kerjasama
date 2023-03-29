@@ -21,7 +21,10 @@ class MouExport implements FromView, WithColumnWidths, WithStyles, WithEvents
     
     public function view(): View
     {
-        $mous = Mou::with(['unit:id,name'])->orderBy('unit_id', 'asc')->get();
+        $mous = Mou::with(['unit:id,name'])
+                    ->where('year_id', session('selected_year_id'))
+                    ->orderBy('unit_id', 'asc')
+                    ->get();
 
         return view('mou.export', compact('mous'));
     }

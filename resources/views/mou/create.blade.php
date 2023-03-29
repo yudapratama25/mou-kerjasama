@@ -1,13 +1,8 @@
 @extends('layout.master')
 
 @section('css')
-<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css' integrity='sha512-EZSUkJWTjzDlspOoPSpUFR0o0Xy7jdzW//6qhUkoZ9c4StFkVsp9fbbd0O06p9ELS3H486m4wmrCELjza4JEog==' crossorigin='anonymous'/>
-<style>
-    .dropify-wrapper .dropify-message p {
-        font-size: .3em;
-    }
-</style>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5.9.3/dist/min/dropzone.min.css" type="text/css"/>
 @endsection
 
 @section('content')
@@ -21,7 +16,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Form Tambah MOU & PKS</h6>
         </div>
         <div class="card-body">
-            <form action="{{ route('mou.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('mou.store') }}" method="post" enctype="multipart/form-data" id="form-mou">
                 @csrf
 
                 @if ($errors->any())
@@ -147,8 +142,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="text-dark font-weight-bold">Upload File Kelengkapan Dokumen</label>
-                    <input type="file" name="mou_file" class="dropify" data-height="100">
+                    <label class="text-dark font-weight-bold">Upload File Kelengkapan Dokumen</label>
+                    
+                    <div class="dropzone dropzone-default dropzone-primary">
+						<div class="dropzone-msg dz-message needsclick">
+						    <h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
+						    <span class="dropzone-msg-desc">Upload up to 10 files</span>
+						</div>
+					</div>
                 </div>
                 
                 <div class="form-group">
@@ -176,7 +177,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" type="submit">
+                <button class="btn btn-primary" type="button" id="btn-submit">
                     Submit
                 </button>
             </form>
@@ -187,17 +188,81 @@
 
 @section('js')
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js' integrity='sha512-8QFTrG0oeOiyWo/VM9Y8kgxdlCryqhIxVeRpWSezdRRAvarxVtwLnGroJgnVW9/XBRduxO/z1GblzPrMQoeuew==' crossorigin='anonymous'></script>
+<script src="https://unpkg.com/dropzone@5.9.3/dist/min/dropzone.min.js"></script>
 <script>
+    Dropzone.autoDiscover = false;
+
     $(function() {
         $(".datepicker").datepicker({
             dateFormat: "yy-mm-dd",
             dayNamesMin: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab" ],
             monthNames: [ "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
         });
-
-        $('.dropify').dropify();
     });
+
+    var myDropZone = new Dropzone('.dropzone', {
+        url: `{{ route('mou.uploadFile') }}`, // Set the url for your upload script location
+        acceptedFiles: ".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx",
+        paramName: "file", // The name that will be used to transfer the file
+        maxFiles: 10,
+        maxFilesize: 10, // MB
+        addRemoveLinks: true,
+        autoQueue: false,
+        success: function(file, response){
+            if (response.status == true) {
+                $("#form-mou").append(`<input type="hidden" name="files[]" value="${response.data.name}" required>`);
+                $("#form-mou").append(`<input type="hidden" name="files_size[]" value="${response.data.size}" required>`);
+            }
+        },
+        headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        }
+    });
+
+    $('#btn-submit').click(submitForm);
+
+    function uploadFile(file, index) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                myDropZone.processFile(file);
+                resolve();
+            }, 500);
+        });
+    }
+
+    async function submitForm() {
+        var Form = document.getElementById('form-mou');
+        if (Form.checkValidity() == false) {
+            var list = Form.querySelectorAll(':invalid');
+            for (var item of list) {
+                item.focus();
+                return false;
+            }
+        }
+        console.log('submit form');
+        Swal.fire({
+            title: 'Mohon tunggu',
+            text: 'Data sedang diproses',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+            }
+        });
+        const acceptedFiles = myDropZone.getAcceptedFiles();
+        if (acceptedFiles.length > 0) {
+            console.log('upload file');
+            for (let i = 0; i < acceptedFiles.length; i++) {
+                console.log('file ke-'+(i+1));
+                await uploadFile(acceptedFiles[i], i);
+            }
+        }
+        console.log('duarrrr');
+        setTimeout(() => {
+            $('#form-mou').submit();
+        }, 1100);
+        Swal.close();
+    }
 
     const nilaiKontrak = document.getElementById('nilai-kontrak');    
     const tfBank = document.getElementById('hasil-transfer-bank');   

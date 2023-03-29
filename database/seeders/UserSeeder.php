@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $name => $email) {
-            User::create(['name' => $name, 'email' => $email, 'password' => Hash::make('12345678')]);
+            User::create(['name' => $name, 'email' => $email, 'password' => Hash::make('12345678'), 'role' => 'administrator']);
         }
     }
 }

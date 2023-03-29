@@ -30,8 +30,8 @@ class UnitSeeder extends Seeder
             'FKIP'
         ];
 
-        foreach ($units as $unit) {
-            Unit::create(['name' => $unit]);
-        }
+        // foreach ($units as $unit) {
+        //     Unit::create(['name' => $unit]);
+        // }
     }
 }

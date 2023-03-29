@@ -95,13 +95,23 @@
         @endforeach
     </li>
     <li class="list-group-item">
-        <strong>Upload File Kelengkapan Dokumen</strong> <br/>
-        @if ($mou->mou_file != NULL)
-            <a href="{{ route('mou.download-file', $mou->mou_file) }}" class="btn btn-primary btn-sm">
-                <i class="fas fa-download"></i> Download File
-            </a>
-        @else
-            Tidak Ada
-        @endif
+        <strong>File Kelengkapan Dokumen</strong> <br/>
+        <ul class="pl-3">
+            @forelse ($mou->files as $file)
+                <li>
+                    <a href="{{ route('mou.download-file', $file->filename) }}">
+                        {{ $file->filename }}
+                    </a>
+                </li>
+            @empty
+                <li>
+                    Tidak Ada
+                </li>
+            @endforelse
+        </ul>
+    </li>
+    <li class="list-group-item">
+        <strong>Ditambahkan Oleh</strong><br/>
+        {{ $mou->user->name }} / {{ $mou->created_at }}
     </li>
 </ul>

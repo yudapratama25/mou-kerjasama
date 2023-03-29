@@ -48,7 +48,7 @@
                                             <h6>Login Gagal</h6>
                                             <ul class="pl-3 m-0">
                                                 @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
+                                                    <li>{!! $error !!}</li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -59,6 +59,7 @@
                                             <input 
                                                 type="email" 
                                                 name="email" 
+                                                value="{{ old('email') }}"
                                                 class="form-control form-control-user" 
                                                 id="exampleInputEmail" 
                                                 placeholder="Alamat Email" required>
@@ -73,7 +74,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <input type="checkbox" name="remember_me" value="1" class="custom-control-input" id="customCheck">
                                                 <label class="custom-control-label" for="customCheck">Ingat Saya</label>
                                             </div>
                                         </div>

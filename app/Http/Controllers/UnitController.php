@@ -14,7 +14,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        $units = Unit::orderBy('name', 'asc')->get();
+        $units = Unit::where('year_id', session('selected_year_id'))->orderBy('name', 'asc')->get();
         return view('unit.index', compact('units'));
     }
 
@@ -40,7 +40,9 @@ class UnitController extends Controller
             'name' => 'required|string|max:250'
         ]);
 
-        Unit::create(['name' => $request->name]);
+        Unit::create(['name' => $request->name, 'year_id' => session('selected_year_id')]);
+
+        createLog("Create Data Unit Kerja | Nama unit : $request->name");
 
         return redirect()->route('unit.index')->with('success', 'Data unit kerja berhasil ditambahkan');
     }
@@ -77,7 +79,11 @@ class UnitController extends Controller
             'name' => 'required|string|max:250'
         ]);
 
+        $from_name = $unit->name;
+
         $unit->update(['name' => $request->name]);
+
+        createLog("Update Data Unit Kerja | Dari nama unit : $from_name , Ke nama unit : $request->name");
 
         return redirect()->route('unit.index')->with('success', 'Data unit kerja berhasil diubah');
     }
@@ -92,7 +98,13 @@ class UnitController extends Controller
     {
         $this->validate($request, ['id' => 'required|numeric']);
 
-        Unit::where('id', $request->id)->delete();
+        $unit = Unit::where('year_id', session('selected_year_id'))->where('id', $request->id)->first();
+
+        if ($unit != null) {
+            $unit_name = $unit->name;
+            $unit->delete();
+            createLog("Delete Data Unit Kerja | Nama unit : $unit_name");
+        }
 
         $request->session()->flash('success', 'Data unit kerja berhasil dihapus');
 

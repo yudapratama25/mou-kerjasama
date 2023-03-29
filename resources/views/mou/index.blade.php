@@ -12,7 +12,7 @@
         <h1 class="h3 mb-0 text-gray-800">Data MOU & PKS</h1>
         <div>
             <a href="{{ route('mou.create') }}" class="btn btn-sm btn-primary shadow-sm mr-2">
-                <i class="fas fa-download fa-sm text-white-50"></i> Tambah Data
+                <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data
             </a>
             <a href="{{ route('mou.export') }}" class="btn btn-sm btn-success shadow-sm">
                 <i class="fas fa-file-excel text-white-50"></i> Export Excel

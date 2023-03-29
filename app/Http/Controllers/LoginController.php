@@ -1,7 +1,8 @@
 <?php
  
 namespace App\Http\Controllers;
- 
+
+use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
  
@@ -19,9 +20,22 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
+
+        $remember_me = $request->has('remember_me') ? true : false;
  
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $remember_me)) {
             $request->session()->regenerate();
+
+            $selected_year = Year::where('year', date('Y'))->first();
+
+            session([
+                'years' => Year::orderBy('year')->get()->pluck('year', 'id'),
+                'selected_year_id' => $selected_year->id,
+                'selected_year' => $selected_year->year
+            ]);
+
+            createLog("Login Berhasil");
+
             return redirect()->intended('dashboard');
         }
  
@@ -32,6 +46,8 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+        createLog("Logout Berhasil");
+
         Auth::logout();
  
         $request->session()->invalidate();
