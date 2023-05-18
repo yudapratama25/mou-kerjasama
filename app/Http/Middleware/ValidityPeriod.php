@@ -38,6 +38,11 @@ class ValidityPeriod
             }
         }
 
+        if (session('years') == null) {
+            Auth::logout();
+            session()->flush();
+        }
+
         return $next($request);
     }
 }
