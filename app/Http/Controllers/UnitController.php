@@ -38,7 +38,7 @@ class UnitController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|string|max:250'
-        ]);
+        ], [], ['name' => 'Nama unit kerja']);
 
         Unit::create(['name' => $request->name, 'year_id' => session('selected_year_id')]);
 
@@ -77,7 +77,7 @@ class UnitController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:250'
-        ]);
+        ], [], ['name' => 'Nama unit kerja']);
 
         $from_name = $unit->name;
 

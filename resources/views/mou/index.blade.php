@@ -44,7 +44,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $mou->unit->name }}</td>
                                 <td>{{ $mou->letter_number }}</td>
-                                <td>{{ \Carbon\Carbon::parse($mou->letter_receipt_date)->isoFormat('D MMMM Y') }}</td>
+                                <td>{{ ($mou->letter_receipt_date != null) ? \Carbon\Carbon::parse($mou->letter_receipt_date)->isoFormat('D MMMM Y') : '-' }}</td>
                                 <td>{{ Str::limit($mou->regarding_letters, 100, '...') }}</td>
                                 <td>
                                     <button type="button" class="btn btn-info btn-sm mr-1" onclick="showMou(`{{ route('mou.show', $mou->id) }}`)">

@@ -22,7 +22,7 @@
 
                 @if ($errors->any())
                     <div class="alert alert-danger">
-                        <h6>Validasi Gagal</h6>
+                        <h5 class="font-weight-bold">Validasi Gagal</h5>
                         <ul class="mb-0 pl-4">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -33,7 +33,7 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Unit Kerja</label>
+                        <label class="text-dark font-weight-bold">Unit Kerja<span class="text-danger">*</span></label>
                         <select name="unit_id" class="form-control" required>
                             @foreach ($units as $unit)
                                 <option value="{{ $unit->id }}" @selected($mou->unit_id == $unit->id)>{{ $unit->name }}</option>
@@ -41,78 +41,118 @@
                         </select>
                     </div>
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nomor Surat</label>
+                        <label class="text-dark font-weight-bold">Nomor Surat<span class="text-danger">*</span></label>
                         <input type="text" name="letter_number" value="{{ $mou->letter_number }}" class="form-control" placeholder="Masukan nomor surat" required>
                     </div>
                     <div class="form-group col-md-4">
                         <label class="text-dark font-weight-bold">Tanggal Terima Surat</label>
-                        <input type="text" name="letter_receipt_date" value="{{ $mou->letter_receipt_date }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="letter_receipt_date_display" value="{{ \Carbon\Carbon::parse($mou->letter_receipt_date)->isoFormat('D MMMM Y') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="letter_receipt_date_value" value="{{ $mou->letter_receipt_date }}">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="text-dark font-weight-bold">Perihal Surat</label>
+                    <label class="text-dark font-weight-bold">Perihal Surat<span class="text-danger">*</span></label>
                     <textarea name="regarding_letters" class="form-control" placeholder="Masukan perihal surat" rows="5" required>{{ $mou->regarding_letters }}</textarea>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label class="text-dark font-weight-bold">Nomor MOU</label>
+                        <label class="text-dark font-weight-bold">Nomor MOU<span class="text-danger">*</span></label>
                         <input type="text" name="mou_number" value="{{ $mou->mou_number }}" placeholder="Masukan nomor MOU" class="form-control" required>
                     </div>
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Tanggal Mulai MOU</label>
-                        <input type="text" name="mou_start" value="{{ $mou->mou_start }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="mou_start_display" value="{{ \Carbon\Carbon::parse($mou->mou_start)->isoFormat('D MMMM Y') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="mou_start_value" value="{{ $mou->mou_start }}">
                     </div>
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Tanggal Berakhir MOU</label>
-                        <input type="text" name="mou_end" value="{{ $mou->mou_end }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="mou_end_display" value="{{ \Carbon\Carbon::parse($mou->mou_end)->isoFormat('D MMMM Y') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="mou_end_value" value="{{ $mou->mou_end }}">
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="text-dark font-weight-bold">Status MOU</label>
+                        <label class="text-dark font-weight-bold">Status MOU<span class="text-danger">*</span></label>
                         <select name="mou_status" class="form-control" required>
                             <option disabled>-</option>
-                            <option value="HIDUP" @selected($mou->mou_status == "HIDUP")>HIDUP</option>
-                            <option value="MATI" @selected($mou->mou_status == "MATI")>MATI</option>
+                            <option value="HIDUP" @selected($mou->mou_status == "HIDUP")>Hidup</option>
+                            <option value="MATI" @selected($mou->mou_status == "MATI")>Mati</option>
+                            <option value="DALAM PERPANJANGAN" @selected($mou->mou_status == "DALAM PERPANJANGAN")>Dalam Perpanjangan</option>
+                            <option value="TIDAK ADA" @selected($mou->mou_status == "TIDAK ADA")>Tidak Ada</option>
                         </select>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label class="text-dark font-weight-bold">Nomor PKS</label>
+                        <label class="text-dark font-weight-bold">Nomor PKS<span class="text-danger">*</span></label>
                         <input type="text" name="pks_number" value="{{ $mou->pks_number }}" placeholder="Masukan nomor PKS" class="form-control" required>
                     </div>
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Tanggal Mulai PKS</label>
-                        <input type="text" name="pks_start" value="{{ $mou->pks_start }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="pks_start_display" value="{{ \Carbon\Carbon::parse($mou->pks_start)->isoFormat('D MMMM Y') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="pks_start_value" value="{{ $mou->pks_start }}">
                     </div>
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Tanggal Berakhir PKS</label>
-                        <input type="text" name="pks_end" value="{{ $mou->pks_end }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="pks_end_display" value="{{ \Carbon\Carbon::parse($mou->pks_end)->isoFormat('D MMMM Y') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="pks_end_value" value="{{ $mou->pks_end }}">
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="text-dark font-weight-bold">Status PKS</label>
+                        <label class="text-dark font-weight-bold">Status PKS<span class="text-danger">*</span></label>
                         <select name="pks_status" class="form-control" required>
                             <option disabled>-</option>
-                            <option value="HIDUP" @selected($mou->pks_status == "HIDUP")>HIDUP</option>
-                            <option value="MATI" @selected($mou->pks_status == "MATI")>MATI</option>
+                            <option value="HIDUP" @selected($mou->pks_status == "HIDUP")>Hidup</option>
+                            <option value="MATI" @selected($mou->pks_status == "MATI")>Mati</option>
+                            <option value="DALAM PERPANJANGAN" @selected($mou->pks_status == "DALAM PERPANJANGAN")>Dalam Perpanjangan</option>
+                            <option value="TIDAK ADA" @selected($mou->pks_status == "TIDAK ADA")>Tidak Ada</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Nama Dokumen</label>
+                        <input type="text" name="document_name" value="{{ $mou->document_name }}" placeholder="Masukan nama dokumen" class="form-control">
+                    </div>
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Nomor Dokumen</label>
+                        <input type="text" name="document_number" value="{{ $mou->document_number }}" placeholder="Masukan nomor dokumen" class="form-control">
+                    </div>
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Tanggal Mulai Dokumen</label>
+                        <input type="text" name="document_start_display" value="{{ \Carbon\Carbon::parse($mou->document_start)->isoFormat('D MMMM Y') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="document_start_value" value="{{ $mou->document_start }}">
+                    </div>
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Tanggal Berakhir Dokumen</label>
+                        <input type="text" name="document_end_display" value="{{ \Carbon\Carbon::parse($mou->document_end)->isoFormat('D MMMM Y') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="document_end_value" value="{{ $mou->document_end }}">
+                    </div>
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Status Dokumen</label>
+                        <select name="document_status" class="form-control">
+                            <option disabled>-</option>
+                            <option value="HIDUP" @selected($mou->document_status == "HIDUP")>Hidup</option>
+                            <option value="MATI" @selected($mou->document_status == "MATI")>Mati</option>
+                            <option value="DALAM PERPANJANGAN" @selected($mou->document_status == "DALAM PERPANJANGAN")>Dalam Perpanjangan</option>
+                            <option value="TIDAK ADA" @selected($mou->document_status == "TIDAK ADA")>Tidak Ada</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="text-dark font-weight-bold">Nama Kegiatan PKS</label>
-                    <textarea name="pks_regarding" class="form-control" placeholder="Masukan nama kegiatan PKS" rows="5" required>{{ $mou->pks_regarding }}</textarea>
+                    <label class="text-dark font-weight-bold">Nama Kegiatan<span class="text-danger">*</span></label>
+                    <textarea name="pks_regarding" class="form-control" placeholder="Masukan nama kegiatan" rows="5" required>{{ $mou->pks_regarding }}</textarea>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nilai Kontrak Di PKS (Rp)</label>
+                        <label class="text-dark font-weight-bold">Nilai Kontrak (Rp)<span class="text-danger">*</span></label>
                         <input type="text" name="pks_contract_value" value="{{ $mou->pks_contract_value }}" placeholder="Masukan nominal" id="nilai-kontrak" onkeyup="ketikNominal(this)" class="form-control" required>
                     </div>
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Hasil Transfer Bank (Rp)</label>
+                        <label class="text-dark font-weight-bold">Hasil Transfer Bank (Rp)<span class="text-danger">*</span></label>
                         <input type="text" name="bank_transfer_proceeds" value="{{ $mou->bank_transfer_proceeds }}" placeholder="Masukan nominal" id="hasil-transfer-bank" onkeyup="ketikNominal(this)" class="form-control" required>
                     </div>
                     <div class="form-group col-md-4">
@@ -123,17 +163,28 @@
                 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nama Mitra</label>
+                        <label class="text-dark font-weight-bold">Nama Mitra<span class="text-danger">*</span></label>
                         <input type="text" name="partner_name" value="{{ $mou->partner_name }}" placeholder="Masukan nama mitra" class="form-control" required>
                     </div>
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 1</label>
+                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 1<span class="text-danger">*</span></label>
                         <input type="text" name="signature_part_1" value="{{ $mou->signature_part_1 }}" placeholder="Masukan nama pihak 1" class="form-control" required>
                     </div>
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 2</label>
+                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 2<span class="text-danger">*</span></label>
                         <input type="text" name="signature_part_2" value="{{ $mou->signature_part_2 }}" placeholder="Masukan nama pihak 2" class="form-control" required>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-dark font-weight-bold">Kriteria Kerja Sama<span class="text-danger">*</span></label>
+                    <select name="cooperation_criteria" class="form-control" required>
+                        @foreach (['pemerintahan dalam negeri', 'pihak swasta dalam negeri', 'pemerintahan luar negeri', 'pihak swasta luar negeri'] as $item)
+                            <option value="{{ ucwords($item) }}" @selected($mou->cooperation_criteria == ucwords($item))>
+                                {{ ucwords($item) }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -177,8 +228,13 @@
                     </div>
                 </div>
 
+                <hr>
+                <p>
+                    (<span class="text-danger">*</span>) Wajib Diisi
+                </p>
+
                 <button class="btn btn-primary" type="button" id="btn-submit">
-                    Submit
+                    Simpan
                 </button>
             </form>
         </div>
@@ -196,11 +252,15 @@
     const selisih = document.getElementById('selisih');
 
     $(function() {
-        $(".datepicker").datepicker({
-            dateFormat: "yy-mm-dd",
-            dayNamesMin: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab" ],
-            monthNames: [ "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
-        });
+        @foreach (['letter_receipt_date','mou_start','mou_end','pks_start','pks_end','document_start','document_end'] as $value)
+            $(`input[name={{ $value }}_display]`).datepicker({
+                dateFormat: "d MM yy",
+                altFormat: "yy-mm-dd",
+                altField: `input[name={{ $value }}_value]`,
+                dayNamesMin: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab" ],
+                monthNames: [ "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+            });
+        @endforeach
 
         ketikNominal(nilaiKontrak);
         ketikNominal(tfBank);
@@ -277,6 +337,7 @@
             @foreach ($mou->files as $indexFile => $file)
                 var file_{{ $indexFile }} = {name: `{{ $file->filename }}`, size: {{ $file->size }}};
                 this.options.addedfile.call(this, file_{{ $indexFile }});
+                // this.options.thumbnail.call(this, file_{{ $indexFile }}, `{{ asset('upload/mou/'.$file->filename) }}`);
                 file_{{ $indexFile }}.previewElement.classList.add('dz-complete');
                 $("#form-mou").append(`<input type="hidden" name="files['{{  $indexFile }}']" value="{{ $file->filename }}" required>`);
 

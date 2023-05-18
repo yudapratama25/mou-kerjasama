@@ -58,7 +58,7 @@
                         <div class="row mt-3">
                             <div class="col-6">
                                 <button class="btn btn-primary mr-3" type="submit">
-                                    Submit
+                                    Simpan
                                 </button>
                                 <button class="btn btn-danger" type="button" id="btn-reset">
                                     Reset Password

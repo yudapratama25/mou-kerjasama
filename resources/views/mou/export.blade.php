@@ -191,19 +191,19 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $mou->unit->name ?? '-' }}</td>
                 <td>{{ $mou->letter_number }}</td>
-                <td>{{ \Carbon\Carbon::parse($mou->letter_receipt_date)->format('d/m/Y') }}</td>
+                <td>{{ ($mou->letter_receipt_date != null) ? \Carbon\Carbon::parse($mou->letter_receipt_date)->format('d/m/Y') : '-' }}</td>
                 <td>{{ $mou->regarding_letters }}</td>
                 <td>{{ $mou->mou_number }}</td>
-                <td>{{ \Carbon\Carbon::parse($mou->mou_start)->format('d/m/Y') }}</td>
-                <td>{{ \Carbon\Carbon::parse($mou->mou_end)->format('d/m/Y') }}</td>
+                <td>{{ ($mou->mou_start != null) ? \Carbon\Carbon::parse($mou->mou_start)->format('d/m/Y') : '-' }}</td>
+                <td>{{ ($mou->mou_end != null) ? \Carbon\Carbon::parse($mou->mou_end)->format('d/m/Y') : '-' }}</td>
                 <td>{{ $mou->mou_status }}</td>
                 <td>{{ $mou->pks_number }}</td>
-                <td>{{ \Carbon\Carbon::parse($mou->pks_start)->format('d/m/Y') }}</td>
-                <td>{{ \Carbon\Carbon::parse($mou->pks_end)->format('d/m/Y') }}</td>
+                <td>{{ ($mou->pks_start != null) ? \Carbon\Carbon::parse($mou->pks_start)->format('d/m/Y') : '-' }}</td>
+                <td>{{ ($mou->pks_end != null) ? \Carbon\Carbon::parse($mou->pks_end)->format('d/m/Y') : '-' }}</td>
                 <td>{{ $mou->pks_status }}</td>
                 <td>{{ $mou->pks_regarding }}</td>
                 <td>Rp {{ number_format($mou->pks_contract_value, 2, ',', '.') }}</td>
-                <td>Rp{{ number_format($mou->bank_transfer_proceeds, 2, ',', '.') }}</td>
+                <td>Rp {{ number_format($mou->bank_transfer_proceeds, 2, ',', '.') }}</td>
                 <td>Rp {{ number_format($mou->nominal_difference, 2, ',', '.') }}</td>
                 <td>{{ $mou->partner_name }}</td>
                 <td>{{ $mou->signature_part_1 }}</td>

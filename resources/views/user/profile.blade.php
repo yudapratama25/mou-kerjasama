@@ -42,7 +42,7 @@
                             <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi perubahan password">
                         </div>
                         <button class="btn btn-primary mr-3" type="submit">
-                            Submit
+                            Simpan
                         </button>
                     </form>
                 </div>

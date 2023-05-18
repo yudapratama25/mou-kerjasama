@@ -59,7 +59,7 @@
                         </small>
                         <div class="d-flex mt-3">
                             <button class="btn btn-primary mr-3" type="submit">
-                                Submit
+                                Simpan
                             </button>
                             <a href="{{ route('user.index') }}" class="btn btn-secondary">
                                 Kembali

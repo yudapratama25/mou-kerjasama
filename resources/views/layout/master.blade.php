@@ -61,7 +61,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Main Menu
+                Menu Utama
             </div>
 
             <!-- Nav Item - Dashboard -->

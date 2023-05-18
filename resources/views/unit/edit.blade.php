@@ -13,6 +13,16 @@
                     <h6 class="m-0 font-weight-bold text-primary">Form Edit Unit Kerja</h6>
                 </div>
                 <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <h6>Validasi Gagal</h6>
+                            <ul class="mb-0 pl-4">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <form action="{{ route('unit.update', $unit->id) }}" method="post">
                         @csrf
                         @method('patch')
@@ -21,7 +31,7 @@
                             <input type="text" name="name" value="{{ $unit->name }}" class="form-control" placeholder="Masukan nama unit kerja" required>
                         </div>
                         <button class="btn btn-primary" type="submit">
-                            Submit
+                            Simpan
                         </button>
                     </form>
                 </div>

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\MouExport;
 use App\Models\Mou;
-use App\Models\MouFile;
 use App\Models\Unit;
 use App\Models\Year;
-use Illuminate\Support\Str;
+use App\Models\MouFile;
+use App\Exports\MouExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\MouRequest;
 use Illuminate\Support\Facades\Validator;
 
 class MouController extends Controller
@@ -43,54 +43,21 @@ class MouController extends Controller
         return view('mou.create', compact('units'));
     }
 
-    public function store(Request $request)
+    public function store(MouRequest $request)
     {
         $input = $request->all();
-
-        if ($request->has('pks_contract_value') && $request->has('bank_transfer_proceeds') && $request->has('nominal_difference')) {
-            $input['pks_contract_value'] = str_replace('.', '', $request->pks_contract_value);
-            $input['bank_transfer_proceeds'] = str_replace('.', '', $request->bank_transfer_proceeds);
-            $input['nominal_difference'] = str_replace('.', '', $request->nominal_difference);
-        }
-
-        $validator = Validator::make($input, [
-            'unit_id' => 'required|numeric|exists:units,id',
-            'letter_number' => 'required|string|max:100',
-            'letter_receipt_date' => 'required|date',
-            'regarding_letters' => 'required|string',
-            'mou_number' => 'required|string|max:100',
-            'mou_start' => 'required|date',
-            'mou_end' => 'required|date',
-            'mou_status' => 'required|in:HIDUP,MATI',
-            'pks_number' => 'required|string|max:100',
-            'pks_start' => 'required|date',
-            'pks_end' => 'required|date',
-            'pks_status' => 'required|in:HIDUP,MATI',
-            'pks_regarding' => 'required|string',
-            'pks_contract_value' => 'required|numeric',
-            'bank_transfer_proceeds' => 'required|numeric',
-            'nominal_difference' => 'required|numeric',
-            'partner_name' => 'required|string|max:250',
-            'signature_part_1' => 'required|string|max:250',
-            'signature_part_2' => 'required|string|max:250',
-            'document_pks' => 'boolean',
-            'document_tor' => 'boolean',
-            'document_rab' => 'boolean',
-            'document_sptjm' => 'boolean',
-            'document_mou' => 'boolean',
-            'document_bank_transfer_proceeds' => 'boolean',
-            'description' => 'max:5000',
-            'files' => 'array',
-            'files_size' => 'array',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput($input);
-        }
 
         $input['user_id'] = Auth::id();
 
         $input['year_id'] = session('selected_year_id');
+
+        foreach (['letter_receipt_date','mou_start','mou_end','pks_start','pks_end','document_start','document_end'] as $date_value) {
+            if ($request->filled($date_value . '_display')) {
+                $input[$date_value] = $input[$date_value . '_value'];
+
+                unset($input[$date_value . '_value'], $input[$date_value . '_display']);
+            }
+        }
 
         $new_mou = Mou::create($input);
 
@@ -142,7 +109,7 @@ class MouController extends Controller
         return view('mou.edit', compact('mou', 'units'));
     }
 
-    public function update(Request $request, Mou $mou)
+    public function update(MouRequest $request, Mou $mou)
     {
         if (!$mou) {
             return redirect()->route('mou.index');
@@ -150,50 +117,17 @@ class MouController extends Controller
 
         $input = $request->all();
 
-        if ($request->has('pks_contract_value') && $request->has('bank_transfer_proceeds') && $request->has('nominal_difference')) {
-            $input['pks_contract_value'] = str_replace('.', '', $request->pks_contract_value);
-            $input['bank_transfer_proceeds'] = str_replace('.', '', $request->bank_transfer_proceeds);
-            $input['nominal_difference'] = str_replace('.', '', $request->nominal_difference);
-        }
-
-        $validator = Validator::make($input, [
-            'unit_id' => 'required|numeric|exists:units,id',
-            'letter_number' => 'required|string|max:100',
-            'letter_receipt_date' => 'required|date',
-            'regarding_letters' => 'required|string',
-            'mou_number' => 'required|string|max:100',
-            'mou_start' => 'required|date',
-            'mou_end' => 'required|date',
-            'mou_status' => 'required|in:HIDUP,MATI',
-            'pks_number' => 'required|string|max:100',
-            'pks_start' => 'required|date',
-            'pks_end' => 'required|date',
-            'pks_status' => 'required|in:HIDUP,MATI',
-            'pks_regarding' => 'required|string',
-            'pks_contract_value' => 'required|numeric',
-            'bank_transfer_proceeds' => 'required|numeric',
-            'nominal_difference' => 'required|numeric',
-            'partner_name' => 'required|string|max:250',
-            'signature_part_1' => 'required|string|max:250',
-            'signature_part_2' => 'required|string|max:250',
-            'document_pks' => 'boolean',
-            'document_tor' => 'boolean',
-            'document_rab' => 'boolean',
-            'document_sptjm' => 'boolean',
-            'document_mou' => 'boolean',
-            'document_bank_transfer_proceeds' => 'boolean',
-            'description' => 'max:5000',
-            'files' => 'array',
-            'files_size' => 'array',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput($input);
-        }
-
         foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds'] as $item) {
             if (!$request->has('document_'.$item)) {
                 $input['document_'.$item] = 0;
+            }
+        }
+
+        foreach (['letter_receipt_date','mou_start','mou_end','pks_start','pks_end','document_start','document_end'] as $date_value) {
+            if ($request->filled($date_value . '_display')) {
+                $input[$date_value] = $input[$date_value . '_value'];
+
+                unset($input[$date_value . '_value'], $input[$date_value . '_display']);
             }
         }
 

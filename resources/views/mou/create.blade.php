@@ -32,7 +32,7 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Unit Kerja</label>
+                        <label class="text-dark font-weight-bold">Unit Kerja<span class="text-danger">*</span></label>
                         <select name="unit_id" class="form-control" required>
                             <option {{ (old('unit_id') == "") ? 'selected' : null }} disabled>Pilih unit kerja</option>
                             @foreach ($units as $unit)
@@ -41,78 +41,118 @@
                         </select>
                     </div>
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nomor Surat</label>
+                        <label class="text-dark font-weight-bold">Nomor Surat<span class="text-danger">*</span></label>
                         <input type="text" name="letter_number" value="{{ old('letter_number') }}" class="form-control" placeholder="Masukan nomor surat" required>
                     </div>
                     <div class="form-group col-md-4">
                         <label class="text-dark font-weight-bold">Tanggal Terima Surat</label>
-                        <input type="text" name="letter_receipt_date" value="{{ old('letter_receipt_date') }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="letter_receipt_date_display" value="{{ old('letter_receipt_date_display') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="letter_receipt_date_value" value="{{ old('letter_receipt_date_value') }}">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="text-dark font-weight-bold">Perihal Surat</label>
+                    <label class="text-dark font-weight-bold">Perihal Surat<span class="text-danger">*</span></label>
                     <textarea name="regarding_letters" class="form-control" placeholder="Masukan perihal surat" rows="5" required>{{ old('regarding_letters') }}</textarea>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label class="text-dark font-weight-bold">Nomor MOU</label>
+                        <label class="text-dark font-weight-bold">Nomor MOU<span class="text-danger">*</span></label>
                         <input type="text" name="mou_number" value="{{ old('mou_number') }}" placeholder="Masukan nomor MOU" class="form-control" required>
                     </div>
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Tanggal Mulai MOU</label>
-                        <input type="text" name="mou_start" value="{{ old('mou_start') }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="mou_start_display" value="{{ old('mou_start_display') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="mou_start_value" value="{{ old('mou_start_value') }}">
                     </div>
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Tanggal Berakhir MOU</label>
-                        <input type="text" name="mou_end" value="{{ old('mou_end') }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="mou_end_display" value="{{ old('mou_end_display') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="mou_end_value" value="{{ old('mou_end_value') }}">
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="text-dark font-weight-bold">Status MOU</label>
+                        <label class="text-dark font-weight-bold">Status MOU<span class="text-danger">*</span></label>
                         <select name="mou_status" class="form-control" required>
                             <option disabled>-</option>
-                            <option value="HIDUP" @selected(old('mou_status') == "HIDUP")>HIDUP</option>
-                            <option value="MATI" @selected(old('mou_status') == "MATI")>MATI</option>
+                            <option value="HIDUP" @selected(old('mou_status') == "HIDUP")>Hidup</option>
+                            <option value="MATI" @selected(old('mou_status') == "MATI")>Mati</option>
+                            <option value="DALAM PERPANJANGAN" @selected(old('mou_status') == "DALAM PERPANJANGAN")>Dalam Perpanjangan</option>
+                            <option value="TIDAK ADA" @selected(old('mou_status') == "TIDAK ADA")>Tidak Ada</option>
                         </select>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label class="text-dark font-weight-bold">Nomor PKS</label>
+                        <label class="text-dark font-weight-bold">Nomor PKS<span class="text-danger">*</span></label>
                         <input type="text" name="pks_number" value="{{ old('pks_number') }}" placeholder="Masukan nomor PKS" class="form-control" required>
                     </div>
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Tanggal Mulai PKS</label>
-                        <input type="text" name="pks_start" value="{{ old('pks_start') }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="pks_start_display" value="{{ old('pks_start_display') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="pks_start_value" value="{{ old('pks_start_value') }}">
                     </div>
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Tanggal Berakhir PKS</label>
-                        <input type="text" name="pks_end" value="{{ old('pks_end') }}" placeholder="Pilih tanggal" class="form-control datepicker" required>
+                        <input type="text" name="pks_end_display" value="{{ old('pks_end_display') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="pks_end_value" value="{{ old('pks_end_value') }}">
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="text-dark font-weight-bold">Status PKS</label>
+                        <label class="text-dark font-weight-bold">Status PKS<span class="text-danger">*</span></label>
                         <select name="pks_status" class="form-control" required>
                             <option disabled>-</option>
-                            <option value="HIDUP" @selected(old('pks_status') == "HIDUP")>HIDUP</option>
-                            <option value="MATI" @selected(old('pks_status') == "MATI")>MATI</option>
+                            <option value="HIDUP" @selected(old('pks_status') == "HIDUP")>Hidup</option>
+                            <option value="MATI" @selected(old('pks_status') == "MATI")>Mati</option>
+                            <option value="DALAM PERPANJANGAN" @selected(old('pks_status') == "DALAM PERPANJANGAN")>Dalam Perpanjangan</option>
+                            <option value="TIDAK ADA" @selected(old('pks_status') == "TIDAK ADA")>Tidak Ada</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Nama Dokumen</label>
+                        <input type="text" name="document_name" value="{{ old('document_name') }}" placeholder="Masukan nama dokumen" class="form-control">
+                    </div>
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Nomor Dokumen</label>
+                        <input type="text" name="document_number" value="{{ old('document_number') }}" placeholder="Masukan nomor dokumen" class="form-control">
+                    </div>
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Tanggal Mulai Dokumen</label>
+                        <input type="text" name="document_start_display" value="{{ old('document_start_display') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="document_start_value" value="{{ old('document_start_value') }}">
+                    </div>
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Tanggal Berakhir Dokumen</label>
+                        <input type="text" name="document_end_display" value="{{ old('document_end_display') }}" placeholder="Pilih tanggal" class="form-control datepicker">
+                        <input type="hidden" name="document_end_value" value="{{ old('document_end_value') }}">
+                    </div>
+                    <div class="form-group col">
+                        <label class="text-dark font-weight-bold">Status Dokumen</label>
+                        <select name="document_status" class="form-control">
+                            <option disabled>-</option>
+                            <option value="HIDUP" @selected(old('document_status') == "HIDUP")>Hidup</option>
+                            <option value="MATI" @selected(old('document_status') == "MATI")>Mati</option>
+                            <option value="DALAM PERPANJANGAN" @selected(old('document_status') == "DALAM PERPANJANGAN")>Dalam Perpanjangan</option>
+                            <option value="TIDAK ADA" @selected(old('document_status') == "TIDAK ADA")>Tidak Ada</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="text-dark font-weight-bold">Nama Kegiatan PKS</label>
-                    <textarea name="pks_regarding" class="form-control" placeholder="Masukan nama kegiatan PKS" rows="5" required>{{ old('pks_regarding') }}</textarea>
+                    <label class="text-dark font-weight-bold">Nama Kegiatan<span class="text-danger">*</span></label>
+                    <textarea name="pks_regarding" class="form-control" placeholder="Masukan nama kegiatan" rows="5" required>{{ old('pks_regarding') }}</textarea>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nilai Kontrak Di PKS (Rp)</label>
+                        <label class="text-dark font-weight-bold">Nilai Kontrak (Rp)<span class="text-danger">*</span></label>
                         <input type="text" name="pks_contract_value" value="{{ old('pks_contract_value') }}" placeholder="Masukan nominal" id="nilai-kontrak" onkeyup="ketikNominal(this)" class="form-control" required>
                     </div>
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Hasil Transfer Bank (Rp)</label>
+                        <label class="text-dark font-weight-bold">Hasil Transfer Bank (Rp)<span class="text-danger">*</span></label>
                         <input type="text" name="bank_transfer_proceeds" value="{{ old('bank_transfer_proceeds') }}" placeholder="Masukan nominal" id="hasil-transfer-bank" onkeyup="ketikNominal(this)" class="form-control" required>
                     </div>
                     <div class="form-group col-md-4">
@@ -123,17 +163,28 @@
                 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nama Mitra</label>
+                        <label class="text-dark font-weight-bold">Nama Mitra<span class="text-danger">*</span></label>
                         <input type="text" name="partner_name" value="{{ old('partner_name') }}" placeholder="Masukan nama mitra" class="form-control" required>
                     </div>
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 1</label>
+                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 1<span class="text-danger">*</span></label>
                         <input type="text" name="signature_part_1" value="{{ old('signature_part_1') }}" placeholder="Masukan nama pihak 1" class="form-control" required>
                     </div>
                     <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 2</label>
+                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 2<span class="text-danger">*</span></label>
                         <input type="text" name="signature_part_2" value="{{ old('signature_part_2') }}" placeholder="Masukan nama pihak 2" class="form-control" required>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-dark font-weight-bold">Kriteria Kerja Sama<span class="text-danger">*</span></label>
+                    <select name="cooperation_criteria" class="form-control" required>
+                        @foreach (['pemerintahan dalam negeri', 'pihak swasta dalam negeri', 'pemerintahan luar negeri', 'pihak swasta luar negeri'] as $item)
+                            <option value="{{ ucwords($item) }}" @selected(old('cooperation_criteria') == ucwords($item))>
+                                {{ ucwords($item) }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -176,9 +227,13 @@
                     @endforeach
                     </div>
                 </div>
+                <hr>
+                <p>
+                    (<span class="text-danger">*</span>) Wajib Diisi
+                </p>
 
                 <button class="btn btn-primary" type="button" id="btn-submit">
-                    Submit
+                    Simpan
                 </button>
             </form>
         </div>
@@ -193,11 +248,15 @@
     Dropzone.autoDiscover = false;
 
     $(function() {
-        $(".datepicker").datepicker({
-            dateFormat: "yy-mm-dd",
-            dayNamesMin: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab" ],
-            monthNames: [ "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
-        });
+        @foreach (['letter_receipt_date','mou_start','mou_end','pks_start','pks_end','document_start','document_end'] as $value)
+            $(`input[name={{ $value }}_display]`).datepicker({
+                dateFormat: "d MM yy",
+                altFormat: "yy-mm-dd",
+                altField: `input[name={{ $value }}_value]`,
+                dayNamesMin: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab" ],
+                monthNames: [ "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+            });
+        @endforeach
     });
 
     var myDropZone = new Dropzone('.dropzone', {

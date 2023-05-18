@@ -13,6 +13,16 @@
                     <h6 class="m-0 font-weight-bold text-primary">Form Tambah Unit Kerja</h6>
                 </div>
                 <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <h5 class="font-weight-bold">Validasi Gagal</h5>
+                            <ul class="mb-0 pl-4">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <form action="{{ route('unit.store') }}" method="post">
                         @csrf
                         <div class="mb-3">
@@ -20,7 +30,7 @@
                             <input type="text" name="name" class="form-control" placeholder="Masukan nama unit kerja" required>
                         </div>
                         <button class="btn btn-primary" type="submit">
-                            Submit
+                            Simpan
                         </button>
                     </form>
                 </div>

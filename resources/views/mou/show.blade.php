@@ -9,7 +9,7 @@
     </li>
     <li class="list-group-item">
         <strong>Tanggal Terima Surat</strong> <br/>
-        {{ \Carbon\Carbon::parse($mou->letter_receipt_date)->format('d/m/Y') }}
+        {{ ($mou->letter_receipt_date != null) ? \Carbon\Carbon::parse($mou->letter_receipt_date)->isoFormat('DD MMMM Y') : '-' }}
     </li>
     <li class="list-group-item">
         <strong>Perihal Surat</strong> <br/>
@@ -21,11 +21,11 @@
     </li>
     <li class="list-group-item">
         <strong>Tanggal Mulai MOU</strong> <br/>
-        {{ \Carbon\Carbon::parse($mou->mou_start)->format('d/m/Y') }}
+        {{ ($mou->mou_start != null) ? \Carbon\Carbon::parse($mou->mou_start)->isoFormat('DD MMMM Y') : '-' }}
     </li>
     <li class="list-group-item">
         <strong>Tanggal Berakhir MOU</strong> <br/>
-        {{ \Carbon\Carbon::parse($mou->mou_end)->format('d/m/Y') }}
+        {{ ($mou->mou_end != null) ? \Carbon\Carbon::parse($mou->mou_end)->isoFormat('DD MMMM Y') : '-' }}
     </li>
     <li class="list-group-item">
         <strong>Status MOU</strong> <br/>
@@ -37,22 +37,44 @@
     </li>
     <li class="list-group-item">
         <strong>Tanggal Mulai PKS</strong> <br/>
-        {{ \Carbon\Carbon::parse($mou->pks_start)->format('d/m/Y') }}
+        {{ ($mou->pks_start != null) ? \Carbon\Carbon::parse($mou->pks_start)->isoFormat('DD MMMM Y') : '-' }}
     </li>
     <li class="list-group-item">
         <strong>Tanggal Berakhir PKS</strong> <br/>
-        {{ \Carbon\Carbon::parse($mou->pks_end)->format('d/m/Y') }}
+        {{ ($mou->pks_end != null) ? \Carbon\Carbon::parse($mou->pks_end)->isoFormat('DD MMMM Y') : '-' }}
     </li>
     <li class="list-group-item">
         <strong>Status PKS</strong> <br/>
         {{ $mou->pks_status }}
     </li>
+    
     <li class="list-group-item">
-        <strong>Nama Kegiatan PKS</strong> <br/>
+        <strong>Nama Dokumen</strong> <br/>
+        {{ $mou->document_name ?? '-' }}
+    </li>
+    <li class="list-group-item">
+        <strong>Nomor Dokumen</strong> <br/>
+        {{ $mou->document_number ?? '-' }}
+    </li>
+    <li class="list-group-item">
+        <strong>Tanggal Mulai Dokumen</strong> <br/>
+        {{ ($mou->document_start != null) ? \Carbon\Carbon::parse($mou->document_start)->isoFormat('DD MMMM Y') : '-' }}
+    </li>
+    <li class="list-group-item">
+        <strong>Tanggal Berakhir Dokumen</strong> <br/>
+        {{ ($mou->document_end != null) ? \Carbon\Carbon::parse($mou->document_end)->isoFormat('DD MMMM Y') : '-' }}
+    </li>
+    <li class="list-group-item">
+        <strong>Status Dokumen</strong> <br/>
+        {{ $mou->document_status ?? '-' }}
+    </li>
+
+    <li class="list-group-item">
+        <strong>Nama Kegiatan</strong> <br/>
         {{ $mou->pks_regarding }}
     </li>
     <li class="list-group-item">
-        <strong>Nilai Kontrak Di PKS</strong> <br/>
+        <strong>Nilai Kontrak</strong> <br/>
         Rp {{ number_format($mou->pks_contract_value, 0, ',', '.') }}
     </li>
     <li class="list-group-item">
@@ -76,8 +98,12 @@
         {{ $mou->signature_part_2 }}
     </li>
     <li class="list-group-item">
+        <strong>Kriteria Kerja Sama</strong> <br/>
+        {{ $mou->cooperation_criteria ?? '-' }}
+    </li>
+    <li class="list-group-item">
         <strong>Keterangan</strong> <br/>
-        {{ $mou->description }}
+        {{ $mou->description ?? '-' }}
     </li>
     <li class="list-group-item">
         <strong>Kelengkapan Dokumen</strong> <br/>
