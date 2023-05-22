@@ -68,4 +68,9 @@ class Mou extends Model
     {
         return $this->hasMany(MouFile::class, 'mou_id', 'id')->select(['id','mou_id','filename','size']);
     }
+
+    public function year()
+    {
+        return $this->belongsTo(Year::class, 'year_id', 'id')->select(['id','year']);
+    }
 }

@@ -47,6 +47,7 @@ Route::middleware(['auth','validity_period'])->prefix('dashboard')->group(functi
     Route::resource('unit', UnitController::class);
     Route::get('mou/export', [MouController::class, 'export'])->name('mou.export');
     Route::get('mou/download-file/{file}', [MouController::class, 'downloadFile'])->name('mou.download-file');
+    Route::get('mou/export-pdf/{id}', [MouController::class, 'exportPdf'])->name('mou.export-pdf');
     Route::post('mou/upload-mou-file', [MouController::class, 'uploadFile'])->name('mou.uploadFile');
     Route::resource('mou', MouController::class);
 

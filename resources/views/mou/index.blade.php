@@ -83,6 +83,7 @@
           ...
         </div>
         <div class="modal-footer">
+          <a id="btn-export-pdf" href="#" target="_blank" class="btn btn-primary">Download PDF</a>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
         </div>
       </div>
@@ -102,7 +103,10 @@
 
         function showMou(url) {
             $('#modal-mou-body').html('');
+            $('#btn-export-pdf').hide();
             $('#modal-mou').modal('show');
+
+            let id = url.split('/').pop();
 
             $.get(url,
                 function (response) {
@@ -110,6 +114,8 @@
                     if (response.status == true) {
                         setTimeout(() => {
                             $('#modal-mou-body').html(response.data.html);
+                            $('#btn-export-pdf').attr('href', `{{ url('dashboard/mou/export-pdf') }}/${id}`);
+                            $('#btn-export-pdf').show();
                         }, 750);
                     }
                 }

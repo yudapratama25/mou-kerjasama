@@ -7,10 +7,12 @@ use App\Models\Unit;
 use App\Models\Year;
 use App\Models\MouFile;
 use App\Exports\MouExport;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Requests\MouRequest;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Requests\MouRequest;
 use Illuminate\Support\Facades\Validator;
 
 class MouController extends Controller
@@ -30,6 +32,19 @@ class MouController extends Controller
         $html = view('mou.show', compact('mou'))->render();
 
         return response()->json(['status' => true, 'message' => 'berhasil mendapatkan data MOU', 'data' => ['html' => $html]], 200);
+    }
+
+    public function exportPdf($id)
+    {
+        $mou = Mou::with(['unit', 'year', 'files'])->where('id', $id)->first();
+
+        if (!$mou) {
+            return abort(404);
+        }
+
+        $pdf = Pdf::loadView('mou.print', compact('mou'));
+        $filename = "MOU " . $mou->unit->name . " - " . Str::limit($mou->regarding_letters, 25, '') . ".pdf";
+        return $pdf->download($filename);
     }
 
     public function downloadFile($file)
