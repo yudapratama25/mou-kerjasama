@@ -121,6 +121,38 @@
         @endforeach
     </li>
     <li class="list-group-item">
+        <h6 class="text-center font-weight-bold">
+            Mengetahui/Menyetujui
+        </h6>
+        <div class="row">
+            <div class="col-6 mb-2">
+                <p>
+                    Tanggal, <br>
+                    Sub Koord Kerjasama <br><br>
+                    ...................................
+                </p>
+            </div>
+            <div class="col-6 mb-2">
+                <p>
+                    Tanggal, <br>
+                    Koord Kerjasama Dan Humas <br><br>
+                    ...................................
+                </p>
+            </div>
+            <div class="col-6">
+                <p>
+                    Tanda Terima Dokumen<br><br>
+                    ...................................
+                </p>
+            </div>
+            <div class="col-6">
+                <p>
+                    Tanggal,
+                </p>
+            </div>
+        </div>
+    </li>
+    <li class="list-group-item">
         <strong>File Kelengkapan Dokumen</strong> <br/>
         <ul class="pl-3">
             @forelse ($mou->files as $file)
