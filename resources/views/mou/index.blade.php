@@ -2,6 +2,15 @@
 
 @section('css')
     <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    <style>
+        table {
+            font-size: .7em;
+        }
+
+        /* th,td {
+            min-width: max-content !important;
+        } */
+    </style>
 @endsection
 
 @section('content')
@@ -27,15 +36,21 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTable" cellspacing="0">
                     <thead>
                         <tr>
                             <th width="5%">No.</th>
                             <th>Unit Kerja</th>
                             <th>Nomor Surat</th>
-                            <th width="15%">Tanggal Terima</th>
-                            <th width="30%">Perihal</th>
-                            <th width="20%">Aksi</th>
+                            <th>Tanggal Terima</th>
+                            <th>Perihal</th>
+                            <th>Status MOU</th>
+                            <th>Status PKS</th>
+                            <th>Nama Mitra</th>
+                            <th>Nama Kegiatan</th>
+                            <th>Nilai Kontrak</th>
+                            <th>Kriteria Kerjasama</th>
+                            <th>#</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,19 +61,29 @@
                                 <td>{{ $mou->letter_number }}</td>
                                 <td>{{ ($mou->letter_receipt_date != null) ? \Carbon\Carbon::parse($mou->letter_receipt_date)->isoFormat('D MMMM Y') : '-' }}</td>
                                 <td>{{ Str::limit($mou->regarding_letters, 100, '...') }}</td>
+                                <td>{{ $mou->mou_status }}</td>
+                                <td>{{ $mou->pks_status }}</td>
+                                <td>{{ $mou->partner_name }}</td>
+                                <td>{{ $mou->pks_regarding }}</td>
+                                <td>Rp {{ number_format($mou->pks_contract_value, 0, ',', '.') }}</td>
+                                <td>{{ $mou->cooperation_criteria ?? '-' }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-info btn-sm mr-1" onclick="showMou(`{{ route('mou.show', $mou->id) }}`)">
-                                        Lihat
-                                    </button>
-                                    <a href="{{ route('mou.edit', $mou->id) }}" class="btn btn-warning btn-sm mr-1">
-                                        Edit
-                                    </a>
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-danger btn-sm" 
-                                        onclick="deleteData(`{{ $mou->id }}`, `{{ route('mou.destroy', $mou->id) }}`)">
-                                        Hapus
-                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button id="btnGroup-{{ $loop->index }}" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          Aksi
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="btnGroup-{{ $loop->index }}">
+                                            <a class="dropdown-item" href="#" onclick="showMou(`{{ route('mou.show', $mou->id) }}`)">
+                                                Lihat
+                                            </a>
+                                            <a class="dropdown-item" href="{{ route('mou.edit', $mou->id) }}">
+                                                Edit
+                                            </a>
+                                            <a class="dropdown-item" href="#" onclick="deleteData(`{{ $mou->id }}`, `{{ route('mou.destroy', $mou->id) }}`)">
+                                                Hapus
+                                            </a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

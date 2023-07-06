@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 
-                <div class="form-row">
+                {{-- <div class="form-row">
                     <div class="form-group col">
                         <label class="text-dark font-weight-bold">Nama Dokumen</label>
                         <input type="text" name="document_name" value="{{ old('document_name') }}" placeholder="Masukan nama dokumen" class="form-control">
@@ -139,10 +139,10 @@
                             <option value="TIDAK ADA" @selected(old('document_status') == "TIDAK ADA")>Tidak Ada</option>
                         </select>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="form-group">
-                    <label class="text-dark font-weight-bold">Nama Kegiatan<span class="text-danger">*</span></label>
+                    <label class="text-dark font-weight-bold">Nama Kegiatan PKS<span class="text-danger">*</span></label>
                     <textarea name="pks_regarding" class="form-control" placeholder="Masukan nama kegiatan" rows="5" required>{{ old('pks_regarding') }}</textarea>
                 </div>
 
@@ -160,31 +160,64 @@
                         <input type="text" name="nominal_difference" value="{{ old('nominal_difference') }}" id="selisih" class="form-control" readonly required>
                     </div>
                 </div>
-                
+
+                <div class="form-group">
+                    <label class="text-dark font-weight-bold">Nama Mitra<span class="text-danger">*</span></label>
+                    <input type="text" name="partner_name" value="{{ old('partner_name') }}" placeholder="Masukan nama mitra" class="form-control" required>
+                </div>
                 <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nama Mitra<span class="text-danger">*</span></label>
-                        <input type="text" name="partner_name" value="{{ old('partner_name') }}" placeholder="Masukan nama mitra" class="form-control" required>
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Nama Penandatangan MOU Pihak 1<span class="text-danger">*</span></label>
+                        <input type="text" name="signature_mou_part_1" value="{{ old('signature_mou_part_1') }}" placeholder="Masukan nama penandatangan MOU pihak 1" class="form-control" required>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 1<span class="text-danger">*</span></label>
-                        <input type="text" name="signature_part_1" value="{{ old('signature_part_1') }}" placeholder="Masukan nama pihak 1" class="form-control" required>
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Jabatan Penandatangan MOU Pihak 1<span class="text-danger">*</span></label>
+                        <input type="text" name="position_mou_part_1" value="{{ old('position_mou_part_1') }}" placeholder="Masukan jabatan penandatangan MOU pihak 1" class="form-control" required>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label class="text-dark font-weight-bold">Nama Penandatangan Pihak 2<span class="text-danger">*</span></label>
-                        <input type="text" name="signature_part_2" value="{{ old('signature_part_2') }}" placeholder="Masukan nama pihak 2" class="form-control" required>
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Nama Penandatangan MOU Pihak 2<span class="text-danger">*</span></label>
+                        <input type="text" name="signature_mou_part_2" value="{{ old('signature_mou_part_2') }}" placeholder="Masukan nama penandatangan MOU pihak 2" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Jabatan Penandatangan MOU Pihak 2<span class="text-danger">*</span></label>
+                        <input type="text" name="position_mou_part_2" value="{{ old('position_mou_part_2') }}" placeholder="Masukan jabatan penandatangan MOU pihak 2" class="form-control" required>
+                    </div>
+                </div>
+                <hr class="mb-4">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Nama Penandatangan PKS Pihak 1<span class="text-danger">*</span></label>
+                        <input type="text" name="signature_pks_part_1" value="{{ old('signature_pks_part_1') }}" placeholder="Masukan nama penandatangan PKS pihak 1" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Jabatan Penandatangan PKS Pihak 1<span class="text-danger">*</span></label>
+                        <input type="text" name="position_pks_part_1" value="{{ old('position_pks_part_1') }}" placeholder="Masukan jabatan penandatangan PKS pihak 1" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Nama Penandatangan PKS Pihak 2<span class="text-danger">*</span></label>
+                        <input type="text" name="signature_pks_part_2" value="{{ old('signature_pks_part_2') }}" placeholder="Masukan nama penandatangan PKS pihak 2" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Jabatan Penandatangan PKS Pihak 2<span class="text-danger">*</span></label>
+                        <input type="text" name="position_pks_part_2" value="{{ old('position_pks_part_2') }}" placeholder="Masukan jabatan penandatangan PKS pihak 2" class="form-control" required>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="text-dark font-weight-bold">Kriteria Kerja Sama<span class="text-danger">*</span></label>
-                    <select name="cooperation_criteria" class="form-control" required>
-                        @foreach (['pemerintahan dalam negeri', 'pihak swasta dalam negeri', 'pemerintahan luar negeri', 'pihak swasta luar negeri'] as $item)
-                            <option value="{{ ucwords($item) }}" @selected(old('cooperation_criteria') == ucwords($item))>
-                                {{ ucwords($item) }}
-                            </option>
-                        @endforeach
-                    </select>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Kontak Pengelola Kegiatan<span class="text-danger">*</span></label>
+                        <input type="text" name="manager_contact" value="{{ old('manager_contact') }}" placeholder="Masukan kontak pengelola kegiatan" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-dark font-weight-bold">Kriteria Kerja Sama<span class="text-danger">*</span></label>
+                        <select name="cooperation_criteria" class="form-control" required>
+                            @foreach (['pemerintahan dalam negeri', 'pihak swasta dalam negeri', 'pemerintahan luar negeri', 'pihak swasta luar negeri'] as $item)
+                                <option value="{{ ucwords($item) }}" @selected(old('cooperation_criteria') == ucwords($item))>
+                                    {{ ucwords($item) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">

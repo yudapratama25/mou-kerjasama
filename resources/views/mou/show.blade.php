@@ -48,7 +48,7 @@
         {{ $mou->pks_status }}
     </li>
     
-    <li class="list-group-item">
+    {{-- <li class="list-group-item">
         <strong>Nama Dokumen</strong> <br/>
         {{ $mou->document_name ?? '-' }}
     </li>
@@ -67,7 +67,7 @@
     <li class="list-group-item">
         <strong>Status Dokumen</strong> <br/>
         {{ $mou->document_status ?? '-' }}
-    </li>
+    </li> --}}
 
     <li class="list-group-item">
         <strong>Nama Kegiatan</strong> <br/>
@@ -90,12 +90,28 @@
         {{ $mou->partner_name }}
     </li>
     <li class="list-group-item">
-        <strong>Penandatangan Pihak 1</strong> <br/>
-        {{ $mou->signature_part_1 }}
+        <strong>Penandatangan MOU Pihak 1</strong> <br/>
+        {{ $mou->signature_mou_part_1 }} <br/>
+        <small><strong>Jabatan :</strong> {{ $mou->position_mou_part_1 }}</small>
     </li>
     <li class="list-group-item">
-        <strong>Penandatangan Pihak 2</strong> <br/>
-        {{ $mou->signature_part_2 }}
+        <strong>Penandatangan MOU Pihak 2</strong> <br/>
+        {{ $mou->signature_mou_part_2 }} <br/>
+        <small><strong>Jabatan :</strong> {{ $mou->position_mou_part_2 }}</small>
+    </li>
+    <li class="list-group-item">
+        <strong>Penandatangan PKS Pihak 1</strong> <br/>
+        {{ $mou->signature_pks_part_1 }} <br/>
+        <small><strong>Jabatan :</strong> {{ $mou->position_pks_part_1 }}</small>
+    </li>
+    <li class="list-group-item">
+        <strong>Penandatangan PKS Pihak 2</strong> <br/>
+        {{ $mou->signature_pks_part_2 }} <br/>
+        <small><strong>Jabatan :</strong> {{ $mou->position_pks_part_2 }}</small>
+    </li>
+    <li class="list-group-item">
+        <strong>Kontak Pengelola Kegiatan</strong> <br/>
+        {{ $mou->manager_contact ?? '-' }}
     </li>
     <li class="list-group-item">
         <strong>Kriteria Kerja Sama</strong> <br/>
@@ -120,7 +136,7 @@
         @endif
         @endforeach
     </li>
-    <li class="list-group-item">
+    {{-- <li class="list-group-item">
         <h6 class="text-center font-weight-bold">
             Mengetahui/Menyetujui
         </h6>
@@ -151,7 +167,7 @@
                 </p>
             </div>
         </div>
-    </li>
+    </li> --}}
     <li class="list-group-item">
         <strong>File Kelengkapan Dokumen</strong> <br/>
         <ul class="pl-3">

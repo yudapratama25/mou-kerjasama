@@ -42,7 +42,9 @@ class MouController extends Controller
             return abort(404);
         }
 
-        $pdf = Pdf::loadView('mou.print', compact('mou'));
+        $nomor_urut = Mou::select('created_at')->where('year_id', $mou->year_id)->where('created_at', '<', $mou->created_at)->withTrashed()->count() + 1;
+
+        $pdf = Pdf::loadView('mou.print', compact('mou', 'nomor_urut'));
         $filename = "MOU " . $mou->unit->name . " - " . Str::limit($mou->regarding_letters, 25, '') . ".pdf";
         return $pdf->download($filename);
     }
@@ -119,7 +121,7 @@ class MouController extends Controller
             return redirect()->route('mou.index');
         }
 
-        $units = Unit::orderBy('name', 'asc')->get();
+        $units = Unit::where('year_id', session('selected_year_id'))->orderBy('name', 'asc')->get();
 
         return view('mou.edit', compact('mou', 'units'));
     }
