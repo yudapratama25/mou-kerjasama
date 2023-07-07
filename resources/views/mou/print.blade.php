@@ -275,7 +275,7 @@
                     </ul>
                 </td>
 
-                <td colspan="4" rowspan="2">
+                <td colspan="4" rowspan="3">
                     <p style="font-weight:bold;margin:0;">Mengetahui/Menyetujui</p>
                     <table>
                         <tr>
@@ -287,12 +287,12 @@
                                     ...................................
                                     <br><br><br>
                                     Tanggal, <br>
-                                    Tambahan 1
+                                    PPK Kerjasama
                                     <br><br><br>
                                     ...................................
                                     <br><br><br>
-
-                                    Tanda Terima Dokumen <br>
+                                    Tanggal, <br>
+                                    BAGREN
                                     <br><br><br>
                                     ...................................
                                 </p>
@@ -305,11 +305,14 @@
                                     ...................................
                                     <br><br><br>
                                     Tanggal, <br>
-                                    Tambahan 2
+                                    SPI
                                     <br><br><br>
                                     ...................................
                                     <br><br><br>
-                                    Tanggal,
+                                    Tanggal, <br>
+                                    Tanda Terima Dokumen
+                                    <br><br><br>
+                                    ...................................
                                 </p>
                             </td>
                         </tr>
@@ -322,6 +325,15 @@
                     KETERANGAN <br/>
                     <p style="margin:6.5px 0 0 0;">
                         {{ $mou['description'] }}
+                    </p>
+                </td>
+            </tr>
+            <tr style="height: 0;">
+                <td class="py-0 w-5">3</td>
+                <td class="py-0" colspan="3">
+                    Kontak Pengelola Kegiatan <br/>
+                    <p style="margin:6.5px 0 0 0;">
+                        {{ $mou['manager_contact'] }}
                     </p>
                 </td>
             </tr>
