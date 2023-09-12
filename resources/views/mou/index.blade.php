@@ -38,7 +38,7 @@
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" cellspacing="0">
                     <thead>
-                        <tr>
+                        <tr style="color:black;">
                             <th width="5%">No.</th>
                             <th>Unit Kerja</th>
                             <th>Nomor Surat</th>
@@ -49,13 +49,15 @@
                             <th>Nama Mitra</th>
                             <th>Nama Kegiatan</th>
                             <th>Nilai Kontrak</th>
+                            <th>Hasil Transfer Bank</th>
+                            <th>Selisih</th>
                             <th>Kriteria Kerjasama</th>
                             <th>#</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($mous as $mou)
-                            <tr>
+                            <tr style="color:black;">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $mou->unit->name }}</td>
                                 <td>{{ $mou->letter_number }}</td>
@@ -66,6 +68,8 @@
                                 <td>{{ $mou->partner_name }}</td>
                                 <td>{{ $mou->pks_regarding }}</td>
                                 <td>Rp {{ number_format($mou->pks_contract_value, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($mou->bank_transfer_proceeds, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($mou->nominal_difference, 0, ',', '.') }}</td>
                                 <td>{{ $mou->cooperation_criteria ?? '-' }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
@@ -88,6 +92,23 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr class="font-weight-bold" style="color:black;">
+                            <td colspan="9" class="text-center">
+                                JUMLAH
+                            </td>
+                            <td>
+                                Rp {{ number_format($mous->sum('pks_contract_value'), 0, ',', '.') }}
+                            </td>
+                            <td>
+                                Rp {{ number_format($mous->sum('bank_transfer_proceeds'), 0, ',', '.') }}
+                            </td>
+                            <td>
+                                Rp {{ number_format($mous->sum('nominal_difference'), 0, ',', '.') }}
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
