@@ -93,18 +93,18 @@
                         @endforeach
                     </tbody>
                     <tfoot>
-                        <tr class="font-weight-bold" style="color:black;">
-                            <td colspan="9" class="text-center">
+                        <tr class="font-weight-bold" style="color:red;">
+                            <td colspan="9" class="text-center" style="font-size: 2.1em;">
                                 JUMLAH
                             </td>
                             <td>
-                                Rp {{ number_format($mous->sum('pks_contract_value'), 0, ',', '.') }}
+                                {{ number_format($mous->sum('pks_contract_value'), 0, ',', '.') }}
                             </td>
                             <td>
-                                Rp {{ number_format($mous->sum('bank_transfer_proceeds'), 0, ',', '.') }}
+                                {{ number_format($mous->sum('bank_transfer_proceeds'), 0, ',', '.') }}
                             </td>
                             <td>
-                                Rp {{ number_format($mous->sum('nominal_difference'), 0, ',', '.') }}
+                                {{ number_format($mous->sum('nominal_difference'), 0, ',', '.') }}
                             </td>
                             <td colspan="2"></td>
                         </tr>
