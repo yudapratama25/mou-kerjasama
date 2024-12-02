@@ -82,7 +82,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Nomor PKS<span class="text-danger">*</span></label>
@@ -160,7 +160,7 @@
                         <input type="text" name="nominal_difference" value="{{ $mou->nominal_difference }}" id="selisih" class="form-control" readonly required>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="text-dark font-weight-bold">Nama Mitra<span class="text-danger">*</span></label>
                     <input type="text" name="partner_name" value="{{ $mou->partner_name }}" placeholder="Masukan nama mitra" class="form-control" required>
@@ -228,7 +228,7 @@
 
                 <div class="form-group">
                     <label class="text-dark font-weight-bold">Upload File Kelengkapan Dokumen</label>
-                    
+
                     <div class="dropzone dropzone-default dropzone-primary">
 						<div class="dropzone-msg dz-message needsclick">
 						    <h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
@@ -236,22 +236,28 @@
 						</div>
 					</div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="text-dark font-weight-bold">Kelengkapan Dokumen</label>
                     <div class="row row-cols-2 w-50">
-                    @foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds'] as $item)
+                    @foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds', 'sk_uls', 'sk_pengelola_kerjasama', 'ia'] as $item)
                         <div class="col">
                             <div class="custom-control custom-checkbox small">
-                                <input 
-                                    type="checkbox" 
-                                    name="document_{{ $item }}" 
-                                    class="custom-control-input" 
-                                    id="kd-{{ $item }}" 
+                                <input
+                                    type="checkbox"
+                                    name="document_{{ $item }}"
+                                    class="custom-control-input"
+                                    id="kd-{{ $item }}"
                                     value="1" @checked($mou->{'document_'.$item} == 1)>
                                 <label class="custom-control-label" for="kd-{{ $item }}">
                                     @if ($item == "bank_transfer_proceeds")
                                         Bukti Transfer Bank
+                                    @elseif ($item == "ia")
+                                        Implementation of Agreement (IA)
+                                    @elseif ($item == "sk_pendirian_uls")
+                                        SK Pendirian ULS
+                                    @elseif ($item == "sk_pengelola_kerjasama")
+                                        SK Pengelola Kerjasama
                                     @else
                                         {{ strtoupper($item) }}
                                     @endif
@@ -280,8 +286,8 @@
 <script src="https://unpkg.com/dropzone@5.9.3/dist/min/dropzone.min.js"></script>
 <script>
     Dropzone.autoDiscover = false;
-    const nilaiKontrak = document.getElementById('nilai-kontrak');    
-    const tfBank = document.getElementById('hasil-transfer-bank');   
+    const nilaiKontrak = document.getElementById('nilai-kontrak');
+    const tfBank = document.getElementById('hasil-transfer-bank');
     const selisih = document.getElementById('selisih');
 
     $(function() {
@@ -357,11 +363,11 @@
                     }
 
                     console.log(file.previewElement);
-                
+
                     $('#form-mou').find('input[value="' + file.name + '"]').remove();
 
                     var fileRef;
-                    return (fileRef = file.previewElement) != null ? 
+                    return (fileRef = file.previewElement) != null ?
                     fileRef.parentNode.removeChild(file.previewElement) : void 0;
                 });
             }
@@ -379,7 +385,7 @@
                 @endif
             @endforeach
         },
-        
+
     });
 
     $('#btn-submit').click(submitForm);

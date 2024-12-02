@@ -160,7 +160,7 @@
             <td rowspan="2">SELISIH</td>
             <td rowspan="2">NAMA MITRA</td>
             <td colspan="2">NAMA DAN JABATAN PENANDATANGAN</td>
-            <td colspan="6">KELENGKAPAN DOKUMEN</td>
+            <td colspan="9">KELENGKAPAN DOKUMEN</td>
             <td colspan="4">PARAF</td>
             <td rowspan="2">KETERANGAN</td>
         </tr>
@@ -177,6 +177,9 @@
             <td>S P T J M</td>
             <td>M O U</td>
             <td>BUKTI TRANSFER BANK</td>
+            <td>SK PENDIRIAN ULS</td>
+            <td>SK PENGELOLA KERJASAMA</td>
+            <td>SK IA</td>
             <td>SUB / KOOR KERJAMA</td>
             <td>PPK PNBP</td>
             <td>S P I</td>
@@ -202,9 +205,9 @@
                 <td>{{ ($mou->pks_end != null) ? \Carbon\Carbon::parse($mou->pks_end)->format('d/m/Y') : '-' }}</td>
                 <td>{{ $mou->pks_status }}</td>
                 <td>{{ $mou->pks_regarding }}</td>
-                <td>Rp {{ number_format($mou->pks_contract_value, 2, ',', '.') }}</td>
-                <td>Rp {{ number_format($mou->bank_transfer_proceeds, 2, ',', '.') }}</td>
-                <td>Rp {{ number_format($mou->nominal_difference, 2, ',', '.') }}</td>
+                <td>Rp {{ number_format($mou->pks_contract_value, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($mou->bank_transfer_proceeds, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($mou->nominal_difference, 0, ',', '.') }}</td>
                 <td>{{ $mou->partner_name }}</td>
                 <td>{{ $mou->signature_part_1 }}</td>
                 <td>{{ $mou->signature_part_2 }}</td>
@@ -214,6 +217,9 @@
                 <td>{{ ($mou->document_sptjm == 1) ? 'ADA' : 'TIDAK ADA' }}</td>
                 <td>{{ ($mou->document_mou == 1) ? 'ADA' : 'TIDAK ADA' }}</td>
                 <td>{{ ($mou->document_bank_transfer_proceeds == 1) ? 'ADA' : 'TIDAK ADA' }}</td>
+                <td>{{ ($mou->document_sk_uls == 1) ? 'ADA' : 'TIDAK ADA' }}</td>
+                <td>{{ ($mou->document_sk_pengelola_kerjasama == 1) ? 'ADA' : 'TIDAK ADA' }}</td>
+                <td>{{ ($mou->document_ia == 1) ? 'ADA' : 'TIDAK ADA' }}</td>
                 <td></td>
                 <td></td>
                 <td></td>

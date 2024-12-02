@@ -82,7 +82,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label class="text-dark font-weight-bold">Nomor PKS<span class="text-danger">*</span></label>
@@ -109,7 +109,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 {{-- <div class="form-row">
                     <div class="form-group col">
                         <label class="text-dark font-weight-bold">Nama Dokumen</label>
@@ -227,7 +227,7 @@
 
                 <div class="form-group">
                     <label class="text-dark font-weight-bold">Upload File Kelengkapan Dokumen</label>
-                    
+
                     <div class="dropzone dropzone-default dropzone-primary">
 						<div class="dropzone-msg dz-message needsclick">
 						    <h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
@@ -235,22 +235,28 @@
 						</div>
 					</div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="text-dark font-weight-bold">Kelengkapan Dokumen</label>
                     <div class="row row-cols-2 w-50">
-                    @foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds'] as $item)
+                    @foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds', 'sk_uls', 'sk_pengelola_kerjasama', 'ia'] as $item)
                         <div class="col">
                             <div class="custom-control custom-checkbox small">
-                                <input 
-                                    type="checkbox" 
-                                    name="document_{{ $item }}" 
-                                    class="custom-control-input" 
-                                    id="kd-{{ $item }}" 
+                                <input
+                                    type="checkbox"
+                                    name="document_{{ $item }}"
+                                    class="custom-control-input"
+                                    id="kd-{{ $item }}"
                                     value="1" @checked(old('document_'.$item) == 1)>
                                 <label class="custom-control-label" for="kd-{{ $item }}">
                                     @if ($item == "bank_transfer_proceeds")
                                         Bukti Transfer Bank
+                                    @elseif ($item == "ia")
+                                        Implementation of Agreement (IA)
+                                    @elseif ($item == "sk_uls")
+                                        SK Pendirian ULS
+                                    @elseif ($item == "sk_pengelola_kerjasama")
+                                        SK Pengelola Kerjasama
                                     @else
                                         {{ strtoupper($item) }}
                                     @endif
@@ -297,7 +303,7 @@
         acceptedFiles: ".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx",
         paramName: "file", // The name that will be used to transfer the file
         maxFiles: 10,
-        maxFilesize: 10, // MB
+        maxFilesize: 20, // MB
         addRemoveLinks: true,
         autoQueue: false,
         success: function(file, response){
@@ -356,8 +362,8 @@
         Swal.close();
     }
 
-    const nilaiKontrak = document.getElementById('nilai-kontrak');    
-    const tfBank = document.getElementById('hasil-transfer-bank');   
+    const nilaiKontrak = document.getElementById('nilai-kontrak');
+    const tfBank = document.getElementById('hasil-transfer-bank');
     const selisih = document.getElementById('selisih');
 
     async function ketikNominal(e) {

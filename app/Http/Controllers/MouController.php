@@ -13,13 +13,16 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Requests\MouRequest;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Validator;
 
 class MouController extends Controller
 {
     public function index()
     {
-        $mous = Mou::with('unit')->where('year_id', session('selected_year_id'))->orderBy('created_at', 'desc')->get();
+        $mous = Mou::with('unit')
+                    ->where('year_id', session('selected_year_id'))
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
         return view('mou.index', compact('mous'));
     }
 
@@ -155,7 +158,7 @@ class MouController extends Controller
         foreach($mou->files as $old_file) {
             if (!in_array($old_file->filename, $update_files)) {
                 if (file_exists(public_path('upload/mou/' . $old_file->filename))) {
-                    unlink(public_path('upload/mou/' . $old_file->filename));   
+                    unlink(public_path('upload/mou/' . $old_file->filename));
                 }
 
                 MouFile::where('id', $old_file->id)->delete();
@@ -194,10 +197,18 @@ class MouController extends Controller
         return response()->json(['status' => true, 'message' => "Data MOU berhasil dihapus"]);
     }
 
-    public function export()
+    public function export(Request $request)
     {
+        $is_minimalis = ($request->filled('is_minimalis')) ? $request->get('is_minimalis') : false;
+
+        $is_rekapitulasi = ($request->filled('is_rekapitulasi')) ? $request->get('is_rekapitulasi') : false;
+
         $year = Year::where('id', session('selected_year_id'))->first()->year;
 
-        return Excel::download(new MouExport, 'DATA MOU & PKS TAHUN '. $year .'.xlsx');
+        $type = (!$is_minimalis) ? 'LENGKAP' : ($is_rekapitulasi ? 'REKAPITULASI' : 'SINGKAT');
+
+        $filename = "DATA $type MOU & PKS TAHUN $year.xlsx";
+
+        return Excel::download(new MouExport($is_minimalis, $is_rekapitulasi), $filename);
     }
 }

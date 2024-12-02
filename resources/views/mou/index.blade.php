@@ -23,9 +23,23 @@
             <a href="{{ route('mou.create') }}" class="btn btn-sm btn-primary shadow-sm mr-2">
                 <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data
             </a>
-            <a href="{{ route('mou.export') }}" class="btn btn-sm btn-success shadow-sm">
-                <i class="fas fa-file-excel text-white-50"></i> Export Excel
-            </a>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm btn-success dropdown-toggle shadow-sm" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-file-excel text-white-50"></i> Export Excel
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ route('mou.export', ['is_minimalis' => false]) }}">
+                        Export Lengkap
+                    </a>
+                    <a class="dropdown-item" href="{{ route('mou.export', ['is_minimalis' => true]) }}">
+                        Export Singkat
+                    </a>
+                    <a class="dropdown-item" href="{{ route('mou.export', ['is_minimalis' => true, 'is_rekapitulasi' => true]) }}">
+                        Export Rekapitulasi
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -47,7 +47,7 @@
         <strong>Status PKS</strong> <br/>
         {{ $mou->pks_status }}
     </li>
-    
+
     {{-- <li class="list-group-item">
         <strong>Nama Dokumen</strong> <br/>
         {{ $mou->document_name ?? '-' }}
@@ -123,10 +123,16 @@
     </li>
     <li class="list-group-item">
         <strong>Kelengkapan Dokumen</strong> <br/>
-        @foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds'] as $item)
+        @foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds', 'sk_uls', 'sk_pengelola_kerjasama', 'ia'] as $item)
         <span class="{{ ($mou->{'document_'.$item} == 1) ? 'text-success' : 'text-danger' }}">
             @if ($item == "bank_transfer_proceeds")
                 Bukti Transfer Bank
+            @elseif ($item == "ia")
+                Implementation of Agreement (IA)
+            @elseif ($item == "sk_uls")
+                SK Pendirian ULS
+            @elseif ($item == "sk_pengelola_kerjasama")
+                SK Pengelola Kerjasama
             @else
                 {{ strtoupper($item) }}
             @endif

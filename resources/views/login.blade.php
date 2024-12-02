@@ -41,7 +41,7 @@
                                 <div class="p-5">
                                     <div class="text-center">
                                         <h6 class="h6 text-gray-900 mb-2 font-weight-bold">Selamat Datang Di</h6>
-                                        <h1 class="h4 text-gray-900 mb-4 font-weight-bold">{{ config('app.name') }}</h1>
+                                        <h1 class="h6 text-gray-900 mb-4 font-weight-bold">Rekapitulasi Perjanjian Kerjasama (PKS)</h1>
                                     </div>
                                     @if ($errors->any())
                                         <div class="alert alert-danger">
@@ -56,20 +56,20 @@
                                     <form class="user" action="{{ route('submit-login') }}" method="POST">
                                         @csrf
                                         <div class="form-group">
-                                            <input 
-                                                type="email" 
-                                                name="email" 
+                                            <input
+                                                type="email"
+                                                name="email"
                                                 value="{{ old('email') }}"
-                                                class="form-control form-control-user" 
-                                                id="exampleInputEmail" 
+                                                class="form-control form-control-user"
+                                                id="exampleInputEmail"
                                                 placeholder="Alamat Email" required>
                                         </div>
                                         <div class="form-group">
-                                            <input 
-                                                type="password" 
-                                                name="password" 
-                                                class="form-control form-control-user" 
-                                                id="exampleInputPassword" 
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                class="form-control form-control-user"
+                                                id="exampleInputPassword"
                                                 placeholder="Password" required>
                                         </div>
                                         <div class="form-group">

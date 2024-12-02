@@ -100,7 +100,7 @@
                 <i class="fas fa-fw fa-list"></i>
                 <span>MOU & PKS</span></a>
             </li>
-            
+
             <li class="nav-item {{ ($menu == 'profile') ? 'active' : null }}">
                 <a class="nav-link" href="{{ route('user.profile') }}">
                 <i class="fas fa-user-circle" style="font-size:1.1em;"></i>

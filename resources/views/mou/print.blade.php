@@ -33,7 +33,7 @@
         .w-20 {
             width: 20% !important;
         }
-        
+
         .w-15 {
             width: 15% !important;
         }
@@ -50,7 +50,7 @@
 </head>
 <body>
     <table>
-        <caption>DATA DOKUMEN KERJASAMA</caption>
+        <caption>DATA DOKUMEN PERJANJIAN KERJASAMA (PKS)</caption>
         <tbody>
             <tr>
                 <td class="w-5">1</td>
