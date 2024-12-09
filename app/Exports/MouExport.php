@@ -20,42 +20,54 @@ class MouExport implements FromView, WithColumnWidths, WithStyles, WithEvents
 {
     use Exportable;
 
-    protected bool $is_minimalis;
-    protected bool $is_rekapitulasi;
+    protected array $data;
 
-    public function __construct($is_minimalis = false, $is_rekapitulasi = false) {
-        $this->is_minimalis = $is_minimalis;
-        $this->is_rekapitulasi = $is_rekapitulasi;
+    public function __construct(array $data) {
+        $this->data = $data;
     }
 
     public function view(): View
     {
-        if ($this->is_rekapitulasi) {
+        if ($this->data['is_rekapitulasi']) {
             $mous = Mou::with(['unit:id,name'])
                         ->select(['unit_id', DB::raw('COUNT(unit_id) as count_mou, SUM(pks_contract_value) as total_pks_contract_value, SUM(bank_transfer_proceeds) as total_bank_transfer_proceeds, SUM(nominal_difference) as total_nominal_difference')])
                         ->where('year_id', session('selected_year_id'))
                         ->orderBy('unit_id', 'asc')
-                        ->groupBy('unit_id')
-                        ->get();
+                        ->groupBy('unit_id');
         } else {
             $mous = Mou::with(['unit:id,name'])
                         ->where('year_id', session('selected_year_id'))
-                        ->orderBy('unit_id', 'asc')
-                        ->get();
+                        ->orderBy('unit_id', 'asc');
+        }
+
+        if ($this->data['unit_id'] != null) {
+            $mous->where('unit_id', $this->data['unit_id']);
+        }
+
+        if ($this->data['regarding_letters'] != null) {
+            $mous->where('regarding_letters', 'like', '%' . $this->data['regarding_letters'] . '%');
+        }
+
+        if ($this->data['letter_number'] != null) {
+            $mous->where('letter_number', 'like', '%' . $this->data['letter_number'] . '%');
+        }
+
+        if ($this->data['letter_receipt_date'] != null) {
+            $mous->where('letter_receipt_date', $this->data['letter_receipt_date']);
         }
 
         $periode = Year::where('id', session('selected_year_id'))->first()->year;
 
-        $view = ($this->is_minimalis) ? 'mou.export-minimalis' : 'mou.export';
+        $view = ($this->data['is_minimalis']) ? 'mou.export-minimalis' : 'mou.export';
 
-        $view = ($this->is_rekapitulasi) ? 'mou.export-rekapitulasi' : $view;
+        $view = ($this->data['is_rekapitulasi']) ? 'mou.export-rekapitulasi' : $view;
 
-        return view($view, ['mous' => $mous, 'is_rekapitulasi' => $this->is_rekapitulasi, 'periode' => $periode]);
+        return view($view, ['mous' => $mous->get(), 'is_rekapitulasi' => $this->data['is_rekapitulasi'], 'periode' => $periode]);
     }
 
     public function styles(Worksheet $sheet)
     {
-        $row_header = ($this->is_minimalis) ? '5' : '5:6';
+        $row_header = ($this->data['is_minimalis']) ? '5' : '5:6';
 
         $styles = [
             'C' => [
@@ -72,7 +84,7 @@ class MouExport implements FromView, WithColumnWidths, WithStyles, WithEvents
             ],
         ];
 
-        if ($this->is_rekapitulasi) {
+        if ($this->data['is_rekapitulasi']) {
             $styles['3'] = [
                 'font' => ['bold' => true],
                 'alignment' => [
@@ -82,7 +94,7 @@ class MouExport implements FromView, WithColumnWidths, WithStyles, WithEvents
             ];
         }
 
-        if ($this->is_rekapitulasi) {
+        if ($this->data['is_rekapitulasi']) {
             $styles['E'] = [
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -95,7 +107,7 @@ class MouExport implements FromView, WithColumnWidths, WithStyles, WithEvents
 
     public function columnWidths(): array
     {
-        if ($this->is_minimalis == false)
+        if ($this->data['is_minimalis'] == false)
         {
             $columns = [
                 'C' => 8,
@@ -134,7 +146,7 @@ class MouExport implements FromView, WithColumnWidths, WithStyles, WithEvents
                 'AJ' => 40, // keterangan
             ];
         }
-        else if ($this->is_minimalis == true && $this->is_rekapitulasi == false)
+        else if ($this->data['is_minimalis'] == true && $this->data['is_rekapitulasi'] == false)
         {
             $columns = [
                 'C' => 8,

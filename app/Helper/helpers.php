@@ -10,3 +10,8 @@ function createLog($action) {
         'action'  => $action
     ]);
 }
+
+function rupiah($value) {
+    $nilai = intval($value);
+    return number_format($nilai, 0, ',', '.');
+}

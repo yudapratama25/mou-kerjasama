@@ -11,19 +11,120 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Requests\MouRequest;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class MouController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $mous = Mou::with('unit')
+        if ($request->ajax()) {
+            $mous = Mou::with('unit')
+                        ->where('year_id', session('selected_year_id'))
+                        ->orderBy('created_at', 'desc');
+
+            if ($request->filled('unit_id') && $request->unit_id != 0) {
+                $mous->where('unit_id', $request->unit_id);
+            }
+
+            if ($request->filled('regarding_letters')) {
+                $mous->where('regarding_letters', 'like', '%' . $request->regarding_letters . '%');
+            }
+
+            if ($request->filled('letter_number')) {
+                $mous->where('letter_number', 'like', '%' . $request->letter_number . '%');
+            }
+
+            if ($request->filled('letter_receipt_date')) {
+                $mous->where('letter_receipt_date', $request->letter_receipt_date);
+            }
+
+            return DataTables::of($mous)
+                            ->addIndexColumn()
+                            ->editColumn('letter_receipt_date', function ($mou) {
+                                return Carbon::parse($mou->letter_receipt_date)->format('d M Y');
+                            })
+                            ->editColumn('pks_contract_value', function ($mou) {
+                                return rupiah($mou->pks_contract_value);
+                            })
+                            ->editColumn('nominal_difference', function ($mou) {
+                                return rupiah($mou->nominal_difference);
+                            })
+                            ->editColumn('bank_transfer_proceeds', function ($mou) {
+                                return rupiah($mou->bank_transfer_proceeds);
+                            })
+                            ->addColumn('action', function ($mou) {
+                                return '<button class="btn btn-info btn-sm mr-1 show-extra" type="button">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+
+                                        <div class="btn-group" role="group">
+                                            <button id="btnGroup-{{ $loop->index }}" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Aksi
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroup-{{ $loop->index }}">
+                                                <a class="dropdown-item" href="#" onclick="showMou(`'. route('mou.show', $mou->id) .'`)">
+                                                    Lihat
+                                                </a>
+                                                <a class="dropdown-item" href="'. route('mou.edit', $mou->id) .'">
+                                                    Edit
+                                                </a>
+                                                <a class="dropdown-item" href="#" onclick="deleteData(`'. $mou->id .'`, `'. route('mou.destroy', $mou->id) .'`)">
+                                                    Hapus
+                                                </a>
+                                            </div>
+                                        </div>';
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
+        }
+
+        $units = Unit::select(['id', 'name'])
                     ->where('year_id', session('selected_year_id'))
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('name', 'asc')
                     ->get();
 
-        return view('mou.index', compact('mous'));
+        return view('mou.index', compact('units'));
+    }
+
+    public function calculation(Request $request)
+    {
+        $mous = Mou::select(['pks_contract_value', 'nominal_difference', 'bank_transfer_proceeds'])
+                        ->where('year_id', session('selected_year_id'));
+
+        if ($request->filled('unit_id') && $request->unit_id != 0) {
+            $mous->where('unit_id', $request->unit_id);
+        }
+
+        if ($request->filled('regarding_letters')) {
+            $mous->where('regarding_letters', 'like', '%' . $request->regarding_letters . '%');
+        }
+
+        if ($request->filled('letter_number')) {
+            $mous->where('letter_number', 'like', '%' . $request->letter_number . '%');
+        }
+
+        if ($request->filled('letter_receipt_date')) {
+            $mous->where('letter_receipt_date', $request->letter_receipt_date);
+        }
+
+        $total_data             = $mous->count();
+        $pks_contract_value     = $mous->sum('pks_contract_value');
+        $nominal_difference     = $mous->sum('nominal_difference');
+        $bank_transfer_proceeds = $mous->sum('bank_transfer_proceeds');
+
+        return response()->json([
+            'status' => true,
+            'message' => 'berhasil mendapatkan data',
+            'data' => [
+                'total_data'             => rupiah($total_data),
+                'pks_contract_value'     => rupiah($pks_contract_value),
+                'bank_transfer_proceeds' => rupiah($bank_transfer_proceeds),
+                'nominal_difference'     => rupiah($nominal_difference)
+            ]
+        ]);
     }
 
     public function show(Mou $mou)
@@ -209,6 +310,15 @@ class MouController extends Controller
 
         $filename = "DATA $type MOU & PKS TAHUN $year.xlsx";
 
-        return Excel::download(new MouExport($is_minimalis, $is_rekapitulasi), $filename);
+        $data = [
+            'is_minimalis' => $is_minimalis,
+            'is_rekapitulasi' => $is_rekapitulasi,
+            'unit_id' => ($request->filled('unit_id') && $request->unit_id != 0) ? $request->unit_id : null,
+            'regarding_letters' => ($request->filled('regarding_letters')) ? $request->regarding_letters : null,
+            'letter_number' => ($request->filled('letter_number')) ? $request->letter_number : null,
+            'letter_receipt_date' => ($request->filled('letter_receipt_date')) ? $request->letter_receipt_date : null,
+        ];
+
+        return Excel::download(new MouExport($data), $filename);
     }
 }
