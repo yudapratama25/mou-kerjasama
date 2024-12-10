@@ -20,7 +20,7 @@
                 <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data
             </a>
 
-            <div class="btn-group" role="group">
+            <div class="btn-group mr-2" role="group">
                 <button type="button" class="btn btn-sm btn-success dropdown-toggle shadow-sm" data-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-file-excel text-white-50"></i> Export Excel
                 </button>
@@ -36,6 +36,12 @@
                     </button>
                 </div>
             </div>
+
+            @if (Auth::user()->role == 'administrator')
+            <a href="{{ route('backup') }}" class="btn btn-sm btn-info shadow-sm">
+                <i class="fas fa-download fa-sm text-white-50"></i> Backup Data
+            </a>
+            @endif
         </div>
     </div>
 
@@ -304,8 +310,6 @@
                     regarding_letters: searchRegardingLetters.val().trim()
                 }).done(
                     function (response) {
-                        console.log(response);
-
                         if (response.status == true) {
                             $('#total-data').html(response.data.total_data);
                             $('#total-contract-value').html(response.data.pks_contract_value);
@@ -358,7 +362,6 @@
 
             $.get(url,
                 function (response) {
-                    console.log(response);
                     if (response.status == true) {
                         setTimeout(() => {
                             $('#modal-mou-body').html(response.data.html);
@@ -371,7 +374,6 @@
         }
 
         function exportExcel(e) {
-            console.log(e);
             let href = e.getAttribute('data-href') + '&';
 
             href += `unit_id=${searchUnitId.val()}&`;

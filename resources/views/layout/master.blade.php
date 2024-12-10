@@ -185,14 +185,23 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @if (session()->has('success'))
-        <script type="text/javascript">
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: `{!! session('success') !!}`,
-                timer: 2500,
-            });
-        </script>
+    <script type="text/javascript">
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: `{!! session('success') !!}`,
+            timer: 4000,
+        });
+    </script>
+    @elseif (session()->has('error'))
+    <script type="text/javascript">
+        Swal.fire({
+            icon: 'danger',
+            title: 'Gagal',
+            text: `{!! session('error') !!}`,
+            timer: 6200,
+        });
+    </script>
     @endif
 
     <script type="text/javascript">
@@ -229,7 +238,6 @@
         }
 
         function changeYear(element) {
-            console.log(element.value);
             $.post(`{{ route('change-year') }}`, {_token: _token, year_id: element.value},
                 function (response) {
                     if (response.status == true) {

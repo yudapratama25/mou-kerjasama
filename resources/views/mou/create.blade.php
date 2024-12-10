@@ -337,7 +337,7 @@
                 return false;
             }
         }
-        console.log('submit form');
+
         Swal.fire({
             title: 'Mohon tunggu',
             text: 'Data sedang diproses',
@@ -349,13 +349,11 @@
         });
         const acceptedFiles = myDropZone.getAcceptedFiles();
         if (acceptedFiles.length > 0) {
-            console.log('upload file');
             for (let i = 0; i < acceptedFiles.length; i++) {
-                console.log('file ke-'+(i+1));
                 await uploadFile(acceptedFiles[i], i);
             }
         }
-        console.log('duarrrr');
+
         setTimeout(() => {
             $('#form-mou').submit();
         }, 1100);
@@ -382,7 +380,6 @@
     }
 
     function formatRupiah(angka, minus = false) {
-        console.log(angka);
         var number_string = angka.replace(/[^,\d]/g, "").toString(),
             split = number_string.split(","),
             sisa = split[0].length % 3,

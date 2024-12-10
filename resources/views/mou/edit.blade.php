@@ -362,8 +362,6 @@
                         var name = file.name;
                     }
 
-                    console.log(file.previewElement);
-
                     $('#form-mou').find('input[value="' + file.name + '"]').remove();
 
                     var fileRef;
@@ -408,7 +406,7 @@
                 return false;
             }
         }
-        console.log('submit form');
+
         Swal.fire({
             title: 'Mohon tunggu',
             text: 'Data sedang diproses',
@@ -419,15 +417,13 @@
             }
         });
         const acceptedFiles = myDropZone.getAcceptedFiles();
-        console.log(acceptedFiles.length);
+
         if (acceptedFiles.length > 0) {
-            console.log('upload file');
             for (let i = 0; i < acceptedFiles.length; i++) {
-                console.log('file ke-'+(i+1));
                 await uploadFile(acceptedFiles[i], i);
             }
         }
-        console.log('duarrrr');
+
         setTimeout(() => {
             $('#form-mou').submit();
         }, 1100);

@@ -12,6 +12,8 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Models\Log;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +67,33 @@ Route::middleware(['auth','validity_period'])->prefix('dashboard')->group(functi
 
     Route::get('profile', [UserController::class, 'profile'])->name('user.profile');
     Route::patch('profile', [UserController::class, 'updateProfile'])->name('user.update-profile');
+
+    Route::get('backup', function() {
+
+        try {
+
+            if (Auth::user()->role === "administrator") {
+                Artisan::call('backup:clean');
+
+                Artisan::call('backup:run --disable-notifications');
+
+                $files = scandir(storage_path('app/mou_backup', SCANDIR_SORT_DESCENDING));
+
+                $new_file = (count($files) < 3) ? null : $files[count($files) - 1];
+
+                if ($new_file != null && Storage::exists('mou_backup/' . $new_file)) {
+                    $backup_filepath = 'mou_backup/' . $new_file;
+                    return Storage::download($backup_filepath);
+                }  else {
+                    return redirect()->back()->with('error', 'Backup database gagal dilakukan - file backup tidak ditemukan');
+                }
+            }
+
+            return redirect('/dashboard');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Backup database gagal dilakukan : ' . $e->getMessage());
+        }
+    })->name('backup');
 
     Route::get('log', function() {
         if (Auth::user()->role === "user") {

@@ -82,7 +82,7 @@
 @section('js')
     <script>
         $('#btn-reset').on('click', function() {
-            let isConfirm = confirm('Konfirmasi reset password ?'); 
+            let isConfirm = confirm('Konfirmasi reset password ?');
 
             if (isConfirm == false) {
                 return false;
@@ -90,7 +90,6 @@
 
             $.post(`{{ route('user.reset-password') }}`, {user_id: `{{ $user->id }}`, _token: `{{ csrf_token() }}`},
                 function (response) {
-                    console.log(response);
                     if (response.status == true) {
                         window.location.replace(`{{ route('user.index') }}`);
                     }
