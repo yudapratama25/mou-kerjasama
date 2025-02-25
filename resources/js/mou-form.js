@@ -1,6 +1,14 @@
- // Dropzone.autoDiscover = false;
+const isOldData = (document.getElementById('is-old-data').value == '1') ? true : false;
+const isFormCreate = (document.getElementById('is-form-create').value == '1') ? true : false;
+const nilaiKontrak = document.getElementById('nilai-kontrak');
+const tfBank = document.getElementById('hasil-transfer-bank');
+const selisih = document.getElementById('selisih');
 
- $(function() {
+if (isOldData && isFormCreate == false) {
+    Dropzone.autoDiscover = false;
+}
+
+$(function() {
     ['letter_receipt_date','mou_start','mou_end','pks_start','pks_end','document_start','document_end'].forEach(value => {
         $(`input[name=${value}_display]`).datepicker({
             dateFormat: "d MM yy",
@@ -21,36 +29,116 @@
     });
 
     $('#btn-submit').on('click', submitForm);
+
+    if (!isFormCreate) {
+        ketikNominal(nilaiKontrak);
+        ketikNominal(tfBank);
+    }
 });
 
-// var myDropZone = new Dropzone('.dropzone', {
-//     url: `{{ route('mou.uploadFile') }}`, // Set the url for your upload script location
-//     acceptedFiles: ".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx",
-//     paramName: "file", // The name that will be used to transfer the file
-//     maxFiles: 10,
-//     maxFilesize: 20, // MB
-//     addRemoveLinks: true,
-//     autoQueue: false,
-//     success: function(file, response){
-//         if (response.status == true) {
-//             $("#form-mou").append(`<input type="hidden" name="files[]" value="${response.data.name}" required>`);
-//             $("#form-mou").append(`<input type="hidden" name="files_size[]" value="${response.data.size}" required>`);
-//         }
-//     },
-//     headers: {
-//         'X-CSRF-TOKEN': window._token
-//     }
-// });
+if (isOldData && isFormCreate == false) {
+    var myDropZone = new Dropzone('.dropzone', {
+        url: `${window.location.origin}/dashboard/mou/upload-mou-file`, // Set the url for your upload script location
+        acceptedFiles: ".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx",
+        paramName: "file", // The name that will be used to transfer the file
+        maxFiles: 10,
+        maxFilesize: 10, // MB
+        addRemoveLinks: true,
+        autoQueue: false,
+        headers: {
+            'X-CSRF-TOKEN': window._token
+        },
+        success: function(file, response){
+            if (response.status == true) {
+                $("#form-mou").append(`<input type="hidden" name="files['${response.data.uniq}']" value="${response.data.name}" required>`);
+                $("#form-mou").append(`<input type="hidden" name="files_size['${response.data.uniq}']" value="${response.data.size}" required>`);
+            }
+        },
+        error: function(file, response) {
+            console.log(file);
+            console.log(response);
+            notifySwal(false, 'Terjadi Kesalahan Server : Gagal Upload File ' + file.name);
+            throw new Error('Terjadi Kesalahan Server');
+        },
+        removedfile: function (file) {
+            if (this.options.dictRemoveFile) {
+                return Dropzone.confirm("Are You Sure to "+this.options.dictRemoveFile, function() {
+                    if (file.previewElement.id != "") {
+                        var name = file.previewElement.id;
+                    } else {
+                        var name = file.name;
+                    }
 
-// function uploadFile(file, index) {
-//     return new Promise((resolve, reject) => {
-//         setTimeout(() => {
-//             myDropZone.processFile(file);
-//             resolve();
-//         }, 500);
-//     });
-// }
+                    $('#form-mou').find('input[value="' + file.name + '"]').remove();
 
+                    var fileRef;
+                    return (fileRef = file.previewElement) != null ?
+                    fileRef.parentNode.removeChild(file.previewElement) : void 0;
+                });
+            }
+        },
+        init: function() {
+            let oldFiles = document.getElementById('old-files').value;
+
+            if (oldFiles !== '') {
+                oldFiles = JSON.parse(oldFiles);
+
+                console.log(oldFiles);
+
+                oldFiles.forEach((file, index) => {
+                    let dataFile = {
+                        name: file.filename,
+                        size: file.size
+                    };
+
+                    this.options.addedfile.call(this, dataFile);
+
+                    // this.options.thumbnail.call(this, dataFile, `${window.location.origin}/upload/mou/${file.filename}`);
+
+                    dataFile.previewElement.classList.add('dz-complete');
+
+                    $("#form-mou").append(`<input type="hidden" name="files[${index}]" value="${file.filename}" required>`);
+
+                    if (index == oldFiles.length - 1) {
+                        this.emit("complete", dataFile);
+                    }
+                });
+            }
+        },
+    });
+
+}
+
+function uploadFile(file) {
+    return new Promise((resolve, reject) => {
+        if (typeof myDropZone === 'undefined') {
+            return reject('Dropzone not found');
+        }
+
+        // Tambahkan event listener untuk menangani sukses atau error
+        function onUploadSuccess(uploadedFile) {
+            if (uploadedFile === file) {
+                myDropZone.off("success", onUploadSuccess);
+                myDropZone.off("error", onUploadError);
+                resolve(); // File berhasil diunggah
+            }
+        }
+
+        function onUploadError(uploadedFile, errorMessage) {
+            if (uploadedFile === file) {
+                myDropZone.off("success", onUploadSuccess);
+                myDropZone.off("error", onUploadError);
+                reject(errorMessage); // File gagal diunggah
+            }
+        }
+
+        myDropZone.on("success", onUploadSuccess);
+        myDropZone.on("error", onUploadError);
+
+        // Mulai proses upload
+        myDropZone.processFile(file);
+    });
+}
 
 async function submitForm() {
     var Form = document.getElementById('form-mou');
@@ -65,19 +153,27 @@ async function submitForm() {
 
     showLoading(true);
 
-    // const acceptedFiles = myDropZone.getAcceptedFiles();
-    // if (acceptedFiles.length > 0) {
-    //     for (let i = 0; i < acceptedFiles.length; i++) {
-    //         await uploadFile(acceptedFiles[i], i);
-    //     }
-    // }
+    if (isOldData && isFormCreate == false) {
+        const acceptedFiles = myDropZone.getAcceptedFiles();
 
-    $('#form-mou').submit();
+        if (acceptedFiles.length > 0) {
+            try {
+                // Tunggu semua file selesai diunggah sebelum lanjut
+                await Promise.all(acceptedFiles.map(file => uploadFile(file)));
+                console.log('Proses Upload File Selesai');
+
+            } catch (error) {
+                console.error("Gagal mengunggah file:", error);
+                showLoading(false);
+                return false;
+            }
+        }
+    }
+
+    console.log('Submit');
+
+    Form.submit();
 }
-
-const nilaiKontrak = document.getElementById('nilai-kontrak');
-const tfBank = document.getElementById('hasil-transfer-bank');
-const selisih = document.getElementById('selisih');
 
 window.ketikNominal = async (e) => {
     if (nilaiKontrak.value != "" && tfBank.value != "") {

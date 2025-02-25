@@ -2,7 +2,7 @@ window._token = document.querySelector('meta[name="csrf-token"]').getAttribute('
 
 window.notifySwal = (isSuccess, message) => {
     Swal.fire({
-        icon: isSuccess ? "success" : "danger",
+        icon: isSuccess ? "success" : "error",
         title: isSuccess ? "Berhasil" : "Gagal",
         text: message,
         timer: isSuccess ? 4000 : 6200,

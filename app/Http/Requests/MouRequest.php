@@ -124,13 +124,17 @@ class MouRequest extends FormRequest
             'cooperation_criteria'            => 'required|string',
             'description'                     => 'max:5000',
             'files'                           => 'array',
-            'files.*'                         => 'file|max:10240|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx,ppt,pptx',
+            'files_size'                      => 'nullable|array',
         ];
 
         foreach (['letter_receipt_date','mou_start','mou_end','pks_start','pks_end','document_start','document_end'] as $date_value) {
             if ($this->filled($date_value . '_display')) {
                 $rules[$date_value . '_value'] = 'required|date';
             }
+        }
+
+        if ($this->filled('is_old_data') && $this->is_old_data == '0') {
+            $rules['files.*'] = 'file|max:10240|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx,ppt,pptx';
         }
 
         return $rules;

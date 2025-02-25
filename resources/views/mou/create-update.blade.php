@@ -16,6 +16,8 @@
             <h6 class="m-0 font-weight-bold text-primary">Form {{ $is_form_create ? 'Tambah' : 'Ubah'  }} Data Kerjasama</h6>
         </div>
         <div class="card-body">
+            <input type="hidden" name="is_form_create" id="is-form-create" value="{{ $is_form_create ? 1 : 0 }}">
+
             <form action="{{ ($is_form_create) ? route('mou.store') : route('mou.update', $mou->id) }}" method="post" enctype="multipart/form-data" id="form-mou">
                 @csrf
 

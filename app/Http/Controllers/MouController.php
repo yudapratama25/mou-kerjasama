@@ -7,6 +7,7 @@ use App\Models\Unit;
 use App\Models\Year;
 use App\Models\MouFile;
 use App\Exports\MouExport;
+use App\Enums\DocumentEnum;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -276,6 +277,16 @@ class MouController extends Controller
 
         // dd($input);
 
+        $is_old_data = ($request->filled('is_old_data') && $request->is_old_data == '1') ? true : false;
+
+        if ($is_old_data) { // jika yang diupdate adalah data lama
+            foreach (DocumentEnum::names() as $item) {
+                if (!$request->has('document_'.$item)) {
+                    $input['document_'.$item] = 0;
+                }
+            }
+        }
+
         foreach (['letter_receipt_date','mou_start','mou_end','pks_start','pks_end','document_start','document_end'] as $date_value) {
             if ($request->filled($date_value . '_display')) {
                 $input[$date_value] = $input[$date_value . '_value'];
@@ -286,30 +297,57 @@ class MouController extends Controller
 
         $mou->update($input);
 
-        if ($request->has('files') && count($input['files']) > 0)
+        if ($is_old_data)
         {
-            foreach ($input['files'] as $type => $file)
-            {
-                $mou_file = MouFile::where('mou_id', $mou->id)->where('document_type', $type)->first();
+            $update_files = $request->has('files') ? $input['files'] : [];
 
-                // hapus old file jika ada
-                if ($mou_file) {
-                    if (file_exists(public_path('upload/mou/' . $mou_file->filename))) {
-                        unlink(public_path('upload/mou/' . $mou_file->filename));
+            foreach($mou->files as $old_file) {
+                if (!in_array($old_file->filename, $update_files)) {
+                    if (file_exists(public_path('upload/mou/' . $old_file->filename))) {
+                        unlink(public_path('upload/mou/' . $old_file->filename));
+                    }
+
+                    MouFile::where('id', $old_file->id)->delete();
+                } else {
+                    if (($key = array_search($old_file->filename, $update_files)) !== false) {
+                        unset($update_files[$key]);
                     }
                 }
+            }
 
-                $uploaded_file = $this->uploadFileV2($file);
+            if (count($update_files) > 0) {
+                foreach ($update_files as $key => $new_filename) {
+                    MouFile::create(['mou_id' => $mou->id, 'filename' => $new_filename, 'size' => $input['files_size'][$key]]);
+                }
+            }
+        }
+        else
+        {
+            if ($request->has('files') && count($input['files']) > 0)
+            {
+                foreach ($input['files'] as $type => $file)
+                {
+                    $mou_file = MouFile::where('mou_id', $mou->id)->where('document_type', $type)->first();
 
-                if ($mou_file) {
-                    $mou_file->update(['filename' => $uploaded_file['name'], 'size' => $uploaded_file['size']]);
-                } else {
-                    MouFile::create([
-                        'mou_id'        => $mou->id,
-                        'document_type' => $type,
-                        'filename'      => $uploaded_file['name'],
-                        'size'          => $uploaded_file['size']]
-                    );
+                    // hapus old file jika ada
+                    if ($mou_file) {
+                        if (file_exists(public_path('upload/mou/' . $mou_file->filename))) {
+                            unlink(public_path('upload/mou/' . $mou_file->filename));
+                        }
+                    }
+
+                    $uploaded_file = $this->uploadFileV2($file);
+
+                    if ($mou_file) {
+                        $mou_file->update(['filename' => $uploaded_file['name'], 'size' => $uploaded_file['size']]);
+                    } else {
+                        MouFile::create([
+                            'mou_id'        => $mou->id,
+                            'document_type' => $type,
+                            'filename'      => $uploaded_file['name'],
+                            'size'          => $uploaded_file['size']]
+                        );
+                    }
                 }
             }
         }
