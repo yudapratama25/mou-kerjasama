@@ -6,8 +6,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="DOKUMEN KERJASAMA UNMUL">
+    <meta name="author" content="Yuda Pratama">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name') }}</title>
     <link rel="icon" href="http://si.ft.unmul.ac.id/image/unmul.ico" />
@@ -20,9 +21,9 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @yield('css')
-
 </head>
 
 <body id="page-top">
@@ -39,7 +40,7 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
+                <div class="sidebar-brand-text mx-3">DOKUMEN KERJASAMA</div>
             </a>
 
             <!-- Divider -->
@@ -98,7 +99,7 @@
             <li class="nav-item {{ ($menu == 'mou' && !request()->has('menu')) ? 'active' : null }}">
                 <a class="nav-link" href="{{ route('mou.index') }}">
                 <i class="fas fa-fw fa-list"></i>
-                <span>MOU & PKS</span></a>
+                <span>Rekapitulasi Kerjasama</span></a>
             </li>
 
             <li class="nav-item {{ ($menu == 'profile') ? 'active' : null }}">
@@ -186,76 +187,17 @@
 
     @if (session()->has('success'))
     <script type="text/javascript">
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil',
-            text: `{!! session('success') !!}`,
-            timer: 4000,
-        });
-    </script>
+        setTimeout(() => {
+            notifySwal(true, `{!! session('success') !!}`);
+        }, 600);
+        </script>
     @elseif (session()->has('error'))
     <script type="text/javascript">
-        Swal.fire({
-            icon: 'danger',
-            title: 'Gagal',
-            text: `{!! session('error') !!}`,
-            timer: 6200,
-        });
+        setTimeout(() => {
+            notifySwal(false, `{!! session('error') !!}`);
+        }, 600);
     </script>
     @endif
-
-    <script type="text/javascript">
-        const _token = `{{ csrf_token() }}`;
-        function deleteData(id, url) {
-            Swal.fire({
-                title: 'Yakin hapus data ?',
-                text: "Data yang telah dihapus tidak dapat dipulihkan",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Konfirmasi',
-                cancelButtonText: 'Batal',
-                showLoaderOnConfirm: true,
-                allowOutsideClick: () => !Swal.isLoading(),
-                }).then((result) => {
-                if (result.isConfirmed) {
-                    $.post(url, {id: id, _method: 'DELETE', _token: _token},
-                        function (result) {
-                            if (result.status == true) {
-                                location.reload();
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Gagal',
-                                    text: 'Terjadi kesalahan',
-                                });
-                            }
-                        }
-                    );
-                }
-            });
-        }
-
-        function changeYear(element) {
-            $.post(`{{ route('change-year') }}`, {_token: _token, year_id: element.value},
-                function (response) {
-                    if (response.status == true) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: 'Pergantian tahun berhasil'
-                        });
-                        setTimeout(() => {
-                            window.location.reload(true);
-                        }, 1100);
-                    } else {
-                        alert("Terjadi kesalahan");
-                    }
-                }
-            );
-        }
-    </script>
 
     @yield('js')
 </body>

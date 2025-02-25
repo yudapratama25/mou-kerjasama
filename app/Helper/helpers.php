@@ -15,3 +15,7 @@ function rupiah($value) {
     $nilai = intval($value);
     return number_format($nilai, 0, ',', '.');
 }
+
+function snakeCase(string $string) {
+    return strtolower(str_replace(' ', '-', $string));
+}

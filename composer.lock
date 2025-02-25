@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad0323fb3c83beae257728b4ca01ed8e",
+    "content-hash": "7e1992a6fc44407a366bbab11301f38d",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -1600,6 +1600,77 @@
                 }
             ],
             "time": "2021-10-07T12:57:01+00:00"
+        },
+        {
+            "name": "laracraft-tech/laravel-useful-additions",
+            "version": "v4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laracraft-tech/laravel-useful-additions.git",
+                "reference": "95e7e5e36ac72c3235198790c88c49f08737ed66"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laracraft-tech/laravel-useful-additions/zipball/95e7e5e36ac72c3235198790c88c49f08737ed66",
+                "reference": "95e7e5e36ac72c3235198790c88c49f08737ed66",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/database": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/support": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/testing": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.12 || ^1.14"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.13",
+                "nunomaduro/larastan": "^1.0 || ^2.5 || ^3.1",
+                "orchestra/testbench": "^7.0 || ^8.0 || ^9.0 || ^10.0",
+                "pestphp/pest": "^1.22 || ^2.0 || ^3.7",
+                "pestphp/pest-plugin-laravel": "^1.22 || ^2.0 || ^3.1",
+                "spatie/laravel-ray": "^1.32"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "LaravelUsefulAdditions": "LaracraftTech\\LaravelUsefulAdditions\\Facades\\LaravelUsefulAdditions"
+                    },
+                    "providers": [
+                        "LaracraftTech\\LaravelUsefulAdditions\\LaravelUsefulAdditionsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LaracraftTech\\LaravelUsefulAdditions\\": "src",
+                    "LaracraftTech\\LaravelUsefulAdditions\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Zacharias Creutznacher",
+                    "email": "zacharias@laracraft.tech",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A collection of useful Laravel additions!",
+            "homepage": "https://github.com/laracraft-tech/laravel-useful-additions",
+            "keywords": [
+                "laracraft-tech",
+                "laravel",
+                "laravel-useful-additions"
+            ],
+            "support": {
+                "issues": "https://github.com/laracraft-tech/laravel-useful-additions/issues",
+                "source": "https://github.com/laracraft-tech/laravel-useful-additions/tree/v4.1.0"
+            },
+            "time": "2025-02-23T14:10:59+00:00"
         },
         {
             "name": "laravel/framework",

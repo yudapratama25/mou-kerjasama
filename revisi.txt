@@ -1,0 +1,5 @@
+REVISI MOU APP
+- upload file terpisah untuk tiap kelengkapan dokumennya
+- ⁠restore data dari hasil backup
+- ⁠ubah tampilan form nya menjadi menggunakan Tabs
+- ⁠fitur copy data dari data MOU sebelumnya ke form input, lalu hubungkan data terbaru dengan data yang di-copy tadi

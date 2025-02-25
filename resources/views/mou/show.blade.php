@@ -121,7 +121,7 @@
         <strong>Keterangan</strong> <br/>
         {{ $mou->description ?? '-' }}
     </li>
-    <li class="list-group-item">
+    {{-- <li class="list-group-item">
         <strong>Kelengkapan Dokumen</strong> <br/>
         @foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds', 'sk_uls', 'sk_pengelola_kerjasama', 'ia'] as $item)
         <span class="{{ ($mou->{'document_'.$item} == 1) ? 'text-success' : 'text-danger' }}">
@@ -141,38 +141,6 @@
             -
         @endif
         @endforeach
-    </li>
-    {{-- <li class="list-group-item">
-        <h6 class="text-center font-weight-bold">
-            Mengetahui/Menyetujui
-        </h6>
-        <div class="row">
-            <div class="col-6 mb-2">
-                <p>
-                    Tanggal, <br>
-                    Sub Koord Kerjasama <br><br>
-                    ...................................
-                </p>
-            </div>
-            <div class="col-6 mb-2">
-                <p>
-                    Tanggal, <br>
-                    Koord Kerjasama Dan Humas <br><br>
-                    ...................................
-                </p>
-            </div>
-            <div class="col-6">
-                <p>
-                    Tanda Terima Dokumen<br><br>
-                    ...................................
-                </p>
-            </div>
-            <div class="col-6">
-                <p>
-                    Tanggal,
-                </p>
-            </div>
-        </div>
     </li> --}}
     <li class="list-group-item">
         <strong>File Kelengkapan Dokumen</strong> <br/>
@@ -180,7 +148,7 @@
             @forelse ($mou->files as $file)
                 <li>
                     <a href="{{ route('mou.download-file', $file->filename) }}">
-                        {{ $file->filename }}
+                        {{ ($file->document_type != null) ? \App\Enums\DocumentEnum::fromName($file->document_type)->value . ' - ' : '' }} {{ $file->filename }}
                     </a>
                 </li>
             @empty

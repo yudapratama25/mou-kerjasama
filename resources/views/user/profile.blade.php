@@ -12,16 +12,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">Ubah Data Akun</h6>
                 </div>
                 <div class="card-body">
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <h6>Validasi Gagal</h6>
-                            <ul class="pl-3">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                    <x-utility.validation-alert/>
                     <form action="{{ route('user.update-profile') }}" method="post">
                         @csrf
                         @method('PATCH')

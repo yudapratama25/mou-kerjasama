@@ -8,7 +8,7 @@
 @section('content')
 <div class="container-fluid">
     <!-- Page Heading -->
-    <h1 class="h3 mb-0 text-gray-800">Data MOU & PKS</h1>
+    <h1 class="h3 mb-0 text-gray-800">Data Kerjasama</h1>
     <p>Edit Data</p>
 
     <div class="card shadow mb-4">
@@ -20,16 +20,7 @@
                 @csrf
                 @method('PATCH')
 
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <h5 class="font-weight-bold">Validasi Gagal</h5>
-                        <ul class="mb-0 pl-4">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                <x-utility.validation-alert/>
 
                 <div class="form-row">
                     <div class="form-group col-md-4">

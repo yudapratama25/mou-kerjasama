@@ -9,9 +9,10 @@ use App\Models\MouFile;
 use App\Exports\MouExport;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Requests\MouRequest;
-use Illuminate\Support\Carbon;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
@@ -161,7 +162,12 @@ class MouController extends Controller
     public function create()
     {
         $units = Unit::where('year_id', session('selected_year_id'))->orderBy('name', 'asc')->get();
-        return view('mou.create', compact('units'));
+
+        $is_form_create = true;
+
+        $mou = new Mou();
+
+        return view('mou.create-update', compact('units', 'is_form_create', 'mou'));
     }
 
     public function store(MouRequest $request)
@@ -182,15 +188,41 @@ class MouController extends Controller
 
         $new_mou = Mou::create($input);
 
-        if ($request->has('files')) {
-            foreach ($input['files'] as $indexFile => $filename) {
-                MouFile::create(['mou_id' => $new_mou->id, 'filename' => $filename, 'size' => $input['files_size'][$indexFile]]);
+        if ($request->has('files') && count($input['files']) > 0) {
+            foreach ($input['files'] as $type => $file) {
+                $uploaded_file = $this->uploadFileV2($file);
+
+                MouFile::create([
+                    'mou_id'        => $new_mou->id,
+                    'document_type' => $type,
+                    'filename'      => $uploaded_file['name'],
+                    'size'          => $uploaded_file['size']]
+                );
             }
         }
 
         createLog("Create Data MOU | No. Surat $new_mou->letter_number");
 
         return redirect()->route('mou.index')->with('success', 'Data MOU berhasil ditambahkan');
+    }
+
+    private function uploadFileV2(UploadedFile $file)
+    {
+        $path = public_path('upload/mou');
+
+        $name = rand(100,999) . '_' . trim($file->getClientOriginalName());
+
+        $name = str_replace('&', 'dan', $name);
+
+        $size = $file->getSize();
+
+        $file->move($path, $name);
+
+        return [
+            'name' => $name,
+            'original_name' => $file->getClientOriginalName(),
+            'size' => $size
+        ];
     }
 
     public function uploadFile(Request $request)
@@ -225,9 +257,13 @@ class MouController extends Controller
             return redirect()->route('mou.index');
         }
 
+        $mou->documents = MouFile::select(['id','filename','document_type'])->where('mou_id', $mou->id)->get()->groupBy('document_type')->map(fn ($item) => $item->first())->toArray();
+
         $units = Unit::where('year_id', session('selected_year_id'))->orderBy('name', 'asc')->get();
 
-        return view('mou.edit', compact('mou', 'units'));
+        $is_form_create = false;
+
+        return view('mou.create-update', compact('mou', 'units', 'is_form_create'));
     }
 
     public function update(MouRequest $request, Mou $mou)
@@ -238,11 +274,7 @@ class MouController extends Controller
 
         $input = $request->all();
 
-        foreach (['pks', 'tor', 'rab', 'sptjm', 'mou', 'bank_transfer_proceeds'] as $item) {
-            if (!$request->has('document_'.$item)) {
-                $input['document_'.$item] = 0;
-            }
-        }
+        // dd($input);
 
         foreach (['letter_receipt_date','mou_start','mou_end','pks_start','pks_end','document_start','document_end'] as $date_value) {
             if ($request->filled($date_value . '_display')) {
@@ -254,25 +286,31 @@ class MouController extends Controller
 
         $mou->update($input);
 
-        $update_files = $request->has('files') ? $input['files'] : [];
+        if ($request->has('files') && count($input['files']) > 0)
+        {
+            foreach ($input['files'] as $type => $file)
+            {
+                $mou_file = MouFile::where('mou_id', $mou->id)->where('document_type', $type)->first();
 
-        foreach($mou->files as $old_file) {
-            if (!in_array($old_file->filename, $update_files)) {
-                if (file_exists(public_path('upload/mou/' . $old_file->filename))) {
-                    unlink(public_path('upload/mou/' . $old_file->filename));
+                // hapus old file jika ada
+                if ($mou_file) {
+                    if (file_exists(public_path('upload/mou/' . $mou_file->filename))) {
+                        unlink(public_path('upload/mou/' . $mou_file->filename));
+                    }
                 }
 
-                MouFile::where('id', $old_file->id)->delete();
-            } else {
-                if (($key = array_search($old_file->filename, $update_files)) !== false) {
-                    unset($update_files[$key]);
-                }
-            }
-        }
+                $uploaded_file = $this->uploadFileV2($file);
 
-        if (count($update_files) > 0) {
-            foreach ($update_files as $key => $new_filename) {
-                MouFile::create(['mou_id' => $mou->id, 'filename' => $new_filename, 'size' => $input['files_size'][$key]]);
+                if ($mou_file) {
+                    $mou_file->update(['filename' => $uploaded_file['name'], 'size' => $uploaded_file['size']]);
+                } else {
+                    MouFile::create([
+                        'mou_id'        => $mou->id,
+                        'document_type' => $type,
+                        'filename'      => $uploaded_file['name'],
+                        'size'          => $uploaded_file['size']]
+                    );
+                }
             }
         }
 

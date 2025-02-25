@@ -14,7 +14,7 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Data MOU & PKS</h1>
+        <h1 class="h3 mb-0 text-gray-800">Data Kerjasama</h1>
         <div>
             <a href="{{ route('mou.create') }}" class="btn btn-sm btn-primary shadow-sm mr-2">
                 <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data
@@ -181,6 +181,7 @@
                             <th width="5%">No.</th>
                             <th>Unit Kerja</th>
                             <th>Nomor Surat</th>
+                            <th>Nama Mitra</th>
                             <th width="10%">Tanggal Terima</th>
                             <th width="13%">Nilai Kontrak</th>
                             <th width="13%">Hasil Transfer Bank</th>
@@ -250,6 +251,7 @@
                     { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                     { data: 'unit.name', name: 'unit_name', },
                     { data: 'letter_number', name: 'letter_number' },
+                    { data: 'partner_name', name: 'partner_name' },
                     { data: 'letter_receipt_date', name: 'letter_receipt_date' },
                     { data: 'pks_contract_value', name: 'pks_contract_value' },
                     { data: 'bank_transfer_proceeds', name: 'bank_transfer_proceeds' },
