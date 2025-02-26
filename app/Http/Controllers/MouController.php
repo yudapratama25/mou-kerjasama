@@ -142,7 +142,7 @@ class MouController extends Controller
 
     public function exportPdf($id)
     {
-        $mou = Mou::with(['unit', 'year', 'files'])->where('id', $id)->first();
+        $mou = Mou::with(['unit', 'year'])->where('id', $id)->first();
 
         if (!$mou) {
             return abort(404);
@@ -150,8 +150,16 @@ class MouController extends Controller
 
         $nomor_urut = Mou::select('created_at')->where('year_id', $mou->year_id)->where('created_at', '<', $mou->created_at)->withTrashed()->count() + 1;
 
+        $mou->documents = MouFile::select(['document_type'])
+                                ->where('mou_id', $mou->id)
+                                ->get()
+                                ->pluck('document_type')
+                                ->toArray();
+
         $pdf = Pdf::loadView('mou.print', compact('mou', 'nomor_urut'));
+
         $filename = "MOU " . $mou->unit->name . " - " . Str::limit($mou->regarding_letters, 25, '') . ".pdf";
+
         return $pdf->download($filename);
     }
 
@@ -258,7 +266,12 @@ class MouController extends Controller
             return redirect()->route('mou.index');
         }
 
-        $mou->documents = MouFile::select(['id','filename','document_type'])->where('mou_id', $mou->id)->get()->groupBy('document_type')->map(fn ($item) => $item->first())->toArray();
+        $mou->documents = MouFile::select(['id','filename','document_type'])
+                                ->where('mou_id', $mou->id)
+                                ->get()
+                                ->groupBy('document_type')
+                                ->map(fn ($item) => $item->first())
+                                ->toArray();
 
         $units = Unit::where('year_id', session('selected_year_id'))->orderBy('name', 'asc')->get();
 
@@ -274,8 +287,6 @@ class MouController extends Controller
         }
 
         $input = $request->all();
-
-        // dd($input);
 
         $is_old_data = ($request->filled('is_old_data') && $request->is_old_data == '1') ? true : false;
 

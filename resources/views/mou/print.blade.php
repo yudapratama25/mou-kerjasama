@@ -254,24 +254,11 @@
                 <td colspan="3">
                     KELENGKAPAN DOKUMEN
                     <ul style="list-style-type: none;padding-left:0px;">
+                        @foreach (\App\Enums\DocumentEnum::array() as $key => $item)
                         <li style="margin-bottom:5px;">
-                            MOU - {{ ($mou['document_mou'] == '1') ? 'ADA' : 'TIDAK ADA' }}
+                            {{ $item }} - {{ (in_array($key, $mou['documents']) || $mou['document_'.$key] == '1') ? 'ADA' : 'TIDAK ADA' }}
                         </li>
-                        <li style="margin-bottom:5px;">
-                            PKS - {{ ($mou['document_pks'] == '1') ? 'ADA' : 'TIDAK ADA' }}
-                        </li>
-                        <li style="margin-bottom:5px;">
-                            TOR - {{ ($mou['document_tor'] == '1') ? 'ADA' : 'TIDAK ADA' }}
-                        </li>
-                        <li style="margin-bottom:5px;">
-                            RAB - {{ ($mou['document_rab'] == '1') ? 'ADA' : 'TIDAK ADA' }}
-                        </li>
-                        <li style="margin-bottom:5px;">
-                            SPTJM - {{ ($mou['document_sptjm'] == '1') ? 'ADA' : 'TIDAK ADA' }}
-                        </li>
-                        <li>
-                            BUKTI TRANSFER BANK - {{ ($mou['document_bank_transfer_proceeds'] == '1') ? 'ADA' : 'TIDAK ADA' }}
-                        </li>
+                        @endforeach
                     </ul>
                 </td>
 

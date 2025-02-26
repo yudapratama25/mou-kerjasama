@@ -57,25 +57,43 @@ if (isOldData && isFormCreate == false) {
         error: function(file, response) {
             console.log(file);
             console.log(response);
-            notifySwal(false, 'Terjadi Kesalahan Server : Gagal Upload File ' + file.name);
-            throw new Error('Terjadi Kesalahan Server');
+            if (typeof response === 'string') {
+                notifySwal(false, `Error File ${file.name} - ${response}`);
+                this.options.removedfile(file);
+            } else {
+                notifySwal(false, 'Terjadi Kesalahan Server : Gagal Upload File ' + file.name);
+                throw new Error('Terjadi Kesalahan Server');
+            }
         },
         removedfile: function (file) {
-            if (this.options.dictRemoveFile) {
-                return Dropzone.confirm("Are You Sure to "+this.options.dictRemoveFile, function() {
-                    if (file.previewElement.id != "") {
-                        var name = file.previewElement.id;
-                    } else {
-                        var name = file.name;
-                    }
+            // if (this.options.dictRemoveFile) {
+            //     return Dropzone.confirm("Are You Sure to "+this.options.dictRemoveFile, function() {
+            //         if (file.previewElement.id != "") {
+            //             var name = file.previewElement.id;
+            //         } else {
+            //             var name = file.name;
+            //         }
 
-                    $('#form-mou').find('input[value="' + file.name + '"]').remove();
+            //         $('#form-mou').find('input[value="' + file.name + '"]').remove();
 
-                    var fileRef;
-                    return (fileRef = file.previewElement) != null ?
-                    fileRef.parentNode.removeChild(file.previewElement) : void 0;
-                });
+            //         var fileRef;
+            //         return (fileRef = file.previewElement) != null ?
+            //         fileRef.parentNode.removeChild(file.previewElement) : void 0;
+            //     });
+            // }
+
+            // var name = (file.previewElement.id != "") ? file.previewElement.id : file.name;
+
+            if (file.previewElement != null && file.previewElement.parentNode != null) {
+                file.previewElement.parentNode.removeChild(file.previewElement);
             }
+
+            $('#form-mou').find('input[value="' + file.name + '"]').remove();
+        },
+        addedfiles() {
+            console.log('event addedfiles');
+            console.log(this.files);
+
         },
         init: function() {
             let oldFiles = document.getElementById('old-files').value;
