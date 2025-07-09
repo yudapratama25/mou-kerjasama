@@ -76,6 +76,7 @@ class MouRequest extends FormRequest
             'pks_end_value'                   => 'Tanggal berakhir PKS',
             'document_start_value'            => 'Tanggal mulai dokumen',
             'document_end_value'              => 'Tanggal berakhir dokumen',
+            'hardcopy'                        => 'Hardcopy',
         ];
 
         return $attributes;
@@ -125,6 +126,7 @@ class MouRequest extends FormRequest
             'description'                     => 'max:5000',
             'files'                           => 'array',
             'files_size'                      => 'nullable|array',
+            'hardcopy'                        => 'nullable|array',
         ];
 
         foreach (['letter_receipt_date','mou_start','mou_end','pks_start','pks_end','document_start','document_end'] as $date_value) {

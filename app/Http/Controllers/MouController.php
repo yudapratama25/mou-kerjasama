@@ -195,6 +195,8 @@ class MouController extends Controller
             }
         }
 
+        $input['hardcopy_files'] = ($request->filled('hardcopy') && is_array($request->hardcopy)) ? array_keys($request->hardcopy) : [];
+
         $new_mou = Mou::create($input);
 
         if ($request->has('files') && count($input['files']) > 0) {
@@ -305,6 +307,8 @@ class MouController extends Controller
                 unset($input[$date_value . '_value'], $input[$date_value . '_display']);
             }
         }
+
+        $input['hardcopy_files'] = ($request->filled('hardcopy') && is_array($request->hardcopy)) ? array_keys($request->hardcopy) : [];
 
         $mou->update($input);
 

@@ -53,6 +53,7 @@
                 <th>Status</th>
                 @endif
                 <th>Unggah File</th>
+                <th>Hardcopy</th>
             </tr>
         </thead>
         <tbody>
@@ -78,6 +79,17 @@
                         <div class="form-input-file">
                             <input type="file" id="upload-file-{{ $key }}" aria-describedby="upload-file-{{ $key }}" name="files[{{ $key }}]">
                         </div>
+                    </div>
+                </td>
+                <td class="align-middle">
+                    <div class="custom-control custom-switch">
+                        <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="hardcopy-{{ $key }}"
+                            value="1"
+                            name="hardcopy[{{ $key }}]" {{ (!$is_form_create && $mou->hardcopy_files !== NULL && in_array($key, $mou->hardcopy_files) ? 'checked' : '') }}>
+                        <label class="custom-control-label" for="hardcopy-{{ $key }}" name="hardcopy[{{ $key }}]">Ada</label>
                     </div>
                 </td>
             </tr>

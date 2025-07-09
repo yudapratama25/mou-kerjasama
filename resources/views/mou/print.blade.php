@@ -7,15 +7,27 @@
     <title>Document</title>
     <style>
         table {
-            /* border-collapse: collapse; */
             width: 100% !important;
         }
-        td {
+        td,th {
             padding: 8px;
             text-align: left;
             vertical-align: baseline;
-            /* border: 1px solid black; */
         }
+
+        table.table-sm th {
+            padding-top: 0 !important;
+        }
+
+        table.table-sm td:nth-child(1), table.table-sm th:nth-child(1) {
+            padding-left: 0 !important;
+        }
+
+        table.table-sm td, table.table-sm th {
+            padding: 3px;
+            font-weight: 400;
+        }
+
         * {
             font-size: 10.3px;
         }
@@ -252,14 +264,31 @@
             <tr>
                 <td class="w-5">1</td>
                 <td colspan="3">
-                    KELENGKAPAN DOKUMEN
-                    <ul style="list-style-type: none;padding-left:0px;">
+                    <table class="table-sm">
+                        <thead>
+                            <tr>
+                                <th>Kelengkapan Dokumen</th>
+                                <th>Soft File</th>
+                                <th>Hardcopy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (\App\Enums\DocumentEnum::array() as $key => $item)
+                            <tr>
+                                <td>{{ $item }}</td>
+                                <td>{!! ((in_array($key, $mou['documents'])) || ($mou['document_'.$key] == '1')) ? 'ADA' : 'X' !!}</td>
+                                <td>{!! (is_array($mou->hardcopy_files) && in_array($key, $mou->hardcopy_files)) ? 'ADA' : 'X' !!}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{-- <ul style="list-style-type: none;padding-left:0px;">
                         @foreach (\App\Enums\DocumentEnum::array() as $key => $item)
                         <li style="margin-bottom:5px;">
-                            {{ $item }} - {{ (in_array($key, $mou['documents']) || $mou['document_'.$key] == '1') ? 'ADA' : 'TIDAK ADA' }}
+                            {{ $item }} - {{ ((in_array($key, $mou['documents'])) || ($mou['document_'.$key] == '1') || (is_array($mou->hardcopy_files) && in_array($key, $mou->hardcopy_files))) ? 'ADA' : 'TIDAK ADA' }}
                         </li>
                         @endforeach
-                    </ul>
+                    </ul> --}}
                 </td>
 
                 <td colspan="4" rowspan="3">

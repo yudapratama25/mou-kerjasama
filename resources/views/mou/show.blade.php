@@ -145,17 +145,35 @@
     <li class="list-group-item">
         <strong>File Kelengkapan Dokumen</strong> <br/>
         <ul class="pl-3">
+            @php
+                $hardcopy_displayed = [];
+            @endphp
             @forelse ($mou->files as $file)
                 <li>
                     <a href="{{ route('mou.download-file', $file->filename) }}">
                         {{ ($file->document_type != null) ? \App\Enums\DocumentEnum::fromName($file->document_type)->value . ' - ' : '' }} {{ $file->filename }}
                     </a>
+
+                    @if (is_array($mou->hardcopy_files) && in_array($file->document_type, $mou->hardcopy_files))
+                        @php
+                            $hardcopy_displayed[] = $file->document_type;
+                        @endphp
+                        <span class="badge badge-pill badge-info">Hardcopy</span>
+                    @endif
                 </li>
             @empty
                 <li>
                     Tidak Ada
                 </li>
             @endforelse
+
+            @if (is_array($mou->hardcopy_files) && count($mou->hardcopy_files) > count($hardcopy_displayed))
+                @foreach (array_diff($mou->hardcopy_files, $hardcopy_displayed) as $document_type)
+                    <li>
+                        {{ \App\Enums\DocumentEnum::fromName($document_type)->value }} <span class="badge badge-pill badge-info">Hardcopy</span>
+                    </li>
+                @endforeach
+            @endif
         </ul>
     </li>
     <li class="list-group-item">

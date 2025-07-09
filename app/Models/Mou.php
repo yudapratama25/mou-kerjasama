@@ -55,6 +55,7 @@ class Mou extends Model
         'document_sk_uls',
         'document_sk_pengelola_kerjasama',
         'document_ia',
+        'hardcopy_files',
         'initial_koor',
         'initial_ppk_pnbp',
         'initial_spi',
@@ -62,6 +63,10 @@ class Mou extends Model
         'cooperation_criteria',
         'description',
         'mou_file',
+    ];
+
+    protected $casts = [
+        'hardcopy_files' => 'array',
     ];
 
     public function user()
