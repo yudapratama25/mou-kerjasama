@@ -91,7 +91,6 @@ if (isOldData && isFormCreate == false) {
             $('#form-mou').find('input[value="' + file.name + '"]').remove();
         },
         addedfiles() {
-            console.log('event addedfiles');
             console.log(this.files);
 
         },
